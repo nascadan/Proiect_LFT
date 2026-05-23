@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 6
-#define YY_END_OF_BUFFER 7
+#define YY_NUM_RULES 7
+#define YY_END_OF_BUFFER 8
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -365,7 +365,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[14] =
     {   0,
-        0,    0,    7,    6,    4,    5,    6,    3,    3,    2,
+        0,    0,    8,    6,    4,    5,    6,    3,    3,    2,
         3,    1,    0
     } ;
 
@@ -377,10 +377,10 @@ static const YY_CHAR yy_ec[256] =
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    4,    5,    1,    5,    5,    5,
         5,    5,    5,    5,    5,    5,    5,    1,    1,    1,
-        1,    1,    1,    1,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        1,    5,    1,    1,    5,    1,    6,    6,    6,    6,
+        1,    1,    1,    1,    6,    6,    6,    6,    6,    6,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        1,    1,    1,    1,    5,    1,    6,    6,    6,    6,
 
         6,    6,    6,    6,    6,    6,    6,    6,    7,    6,
         6,    6,    6,    6,    6,    6,    6,    8,    6,    6,
@@ -403,13 +403,13 @@ static const YY_CHAR yy_ec[256] =
 
 static const YY_CHAR yy_meta[9] =
     {   0,
-        1,    1,    1,    1,    2,    3,    3,    3
+        1,    1,    1,    2,    3,    4,    4,    4
     } ;
 
 static const flex_int16_t yy_base[16] =
     {   0,
-        0,    0,   13,   14,   14,   14,    0,    0,    4,    0,
-        0,    0,   14,    8,    7
+        0,    0,   14,   15,   15,   15,    0,    0,    2,    0,
+        0,    0,   15,    7,    9
     } ;
 
 static const flex_int16_t yy_def[16] =
@@ -418,18 +418,18 @@ static const flex_int16_t yy_def[16] =
        15,   15,    0,   13,   13
     } ;
 
-static const flex_int16_t yy_nxt[23] =
+static const flex_int16_t yy_nxt[24] =
     {   0,
-        4,    5,    6,    7,    8,    8,    9,    8,   11,   11,
-       10,   12,   13,    3,   13,   13,   13,   13,   13,   13,
-       13,   13
+        4,    5,    6,    7,    8,    8,    9,    8,   10,   12,
+       10,   11,   11,   13,    3,   13,   13,   13,   13,   13,
+       13,   13,   13
     } ;
 
-static const flex_int16_t yy_chk[23] =
+static const flex_int16_t yy_chk[24] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,   15,   15,
-       14,    9,    3,   13,   13,   13,   13,   13,   13,   13,
-       13,   13
+        1,    1,    1,    1,    1,    1,    1,    1,   14,    9,
+       14,   15,   15,    3,   13,   13,   13,   13,   13,   13,
+       13,   13,   13
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -447,12 +447,11 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "proj.l"
-/* proj.l */
-#line 3 "proj.l"
-#include "y.tab.h"  
-#include <string.h>  
-#line 455 "lex.yy.c"
-#line 456 "lex.yy.c"
+#line 2 "proj.l"
+#include "y.tab.h"
+#include <string.h>
+#line 453 "lex.yy.c"
+#line 454 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -669,9 +668,9 @@ YY_DECL
 		}
 
 	{
-#line 7 "proj.l"
+#line 6 "proj.l"
 
-#line 675 "lex.yy.c"
+#line 673 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -704,7 +703,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 14 );
+		while ( yy_base[yy_current_state] != 15 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -730,36 +729,41 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 8 "proj.l"
+#line 7 "proj.l"
 { return MV_COMMAND; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 9 "proj.l"
-{ strcpy(yylval.strval, yytext); return PARAM_NAME; }
+#line 8 "proj.l"
+{ yylval.strval = strdup(yytext); return PARAM_NAME; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 10 "proj.l"
-{ strcpy(yylval.strval, yytext); return PARAM_VALUE; }
+#line 9 "proj.l"
+{ yylval.strval = strdup(yytext); return PARAM_VALUE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 11 "proj.l"
+#line 10 "proj.l"
 ;
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 12 "proj.l"
+#line 11 "proj.l"
 return *yytext;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
+#line 12 "proj.l"
+return yytext[0];
+	YY_BREAK
+case 7:
+YY_RULE_SETUP
 #line 13 "proj.l"
 ECHO;
 	YY_BREAK
-#line 763 "lex.yy.c"
+#line 766 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1765,4 +1769,5 @@ void yyfree (void * ptr )
 #define YYTABLES_NAME "yytables"
 
 #line 13 "proj.l"
+
 
