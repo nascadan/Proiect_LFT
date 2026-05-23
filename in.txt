@@ -1,1 +1,1 @@
-mv /dummy /dummy2 -f dummyvalue
+mv ./dummy /dummy2 -f dummyvalue

@@ -13,40 +13,34 @@ void convertMVParamName(char*, char*);
 }
 
 %token MV_COMMAND
-%token<strval> PARAM_NAME PARAM_VALUE
-%type<strval> all_options line
+%token<strval> PARAM_NAME PARAM_VALUE PATH_PARAM_VALUE
+%type<strval> all_options line option_value src_and_dst
 %%
 
 total:       line               { printf("%s\n", $1); }
             | total '\n' line   { printf("%s\n", $3); }
             ;
-line:       MV_COMMAND all_options PARAM_VALUE PARAM_VALUE      {   char* result;
-                                                                    sprintf(result, "Move-Item -Path %s -Destination %s %s", $3, $4, $2);
-                                                                    $$ = result;
+line:       MV_COMMAND all_options src_and_dst                  {
+                                                                    sprintf($$, "Move-Item %s %s", $2, $3);
                                                                 }
-            | MV_COMMAND PARAM_VALUE PARAM_VALUE all_options    {   char* result;
-                                                                    sprintf(result, "Move-Item -Path %s -Destination %s %s", $2, $3, $4);
-                                                                    $$ = result;
+            | MV_COMMAND src_and_dst all_options                {
+                                                                    sprintf($$, "Move-Item %s %s", $3, $2);
                                                                 }
             ;
-all_options:    PARAM_NAME                             {
-                                                        char* intermediar;
-                                                        convertMVParamName($1, intermediar);
-                                                        strcpy($$, intermediar);
-                                                        }
-                | PARAM_NAME PARAM_VALUE              {   char* intermediar;
+src_and_dst:    PATH_PARAM_VALUE PATH_PARAM_VALUE             {
+                                                        sprintf($$, "-Path %s -Destination %s ", $1, $2);
+                                                    }
+all_options:    PARAM_NAME option_value             {   char* intermediar;
                                                         convertMVParamName($1, intermediar);
                                                         sprintf($$, "%s %s", intermediar, $2);
                                                     }
-                | all_options ' ' PARAM_NAME        {
-                                                        char* intermediar;
-                                                        convertMVParamName($3, intermediar);
-                                                        sprintf($$, "%s %s", $1, intermediar);
-                                                    }
-                | all_options ' ' PARAM_NAME PARAM_VALUE {  char* intermediar;
-                                                            convertMVParamName($3, intermediar);
-                                                            sprintf($$, "%s %s %s", $1, intermediar, $4);
+                | PARAM_NAME option_value all_options   {  char* intermediar;
+                                                            convertMVParamName($2, intermediar);
+                                                            sprintf($$, "%s %s %s", $1, intermediar, $3);
                                                         }
+                ;
+option_value:   PARAM_VALUE                         { sprintf($$, "%s", $1); }
+                |                                   { sprintf($$, ""); }
                 ;
 
 %%
@@ -61,5 +55,5 @@ int yyerror(char* s)
 }
 void convertMVParamName(char* pname, char* output) {
     if(strcmp(pname, "-f") == 0 || strcmp(pname, "--force") == 0)
-        strcpy(output, "-Force");
+        sprintf(output, "-Force");
 }
