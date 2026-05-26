@@ -56,8 +56,7 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     MV_COMMAND = 258,              /* MV_COMMAND  */
     PARAM_NAME = 259,              /* PARAM_NAME  */
-    PARAM_VALUE = 260,             /* PARAM_VALUE  */
-    PATH_PARAM_VALUE = 261         /* PATH_PARAM_VALUE  */
+    PARAM_VALUE = 260              /* PARAM_VALUE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -69,7 +68,6 @@ extern int yydebug;
 #define MV_COMMAND 258
 #define PARAM_NAME 259
 #define PARAM_VALUE 260
-#define PATH_PARAM_VALUE 261
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -80,7 +78,7 @@ union YYSTYPE
     int intval;
     char* strval;
 
-#line 84 "y.tab.h"
+#line 82 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

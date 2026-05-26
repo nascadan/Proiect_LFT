@@ -1,15 +1,13 @@
-/* proj.l */
 %{
-#include "y.tab.h"  
-#include <string.h>  
+#include "y.tab.h"
+#include <string.h>
 %}
 %option noyywrap
 %%
 mv                  { return MV_COMMAND; }
-(\-)?\-[a-z]+             { yylval.strval = yytext; return PARAM_NAME; }
-\.?\/[a-zA-Z\\_0-9\.\/]+  { yylval.strval= yytext; return PATH_PARAM_VALUE; }
-[a-zA-Z\\_0-9\.\/]+     { yylval.strval= yytext; return PARAM_VALUE; }
+\-[a-zA-Z\-]+        { yylval.strval = strdup(yytext); return PARAM_NAME; }
+[a-zA-Z\_0-9\.\/]+      { yylval.strval = strdup(yytext); return PARAM_VALUE; }
 [ \t]               ;
-\n                  return *yytext;
-.                   ;
+"\n"                return *yytext;
+.                   return yytext[0];
 %%
