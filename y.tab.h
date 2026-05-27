@@ -55,8 +55,10 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     MV_COMMAND = 258,              /* MV_COMMAND  */
-    PARAM_NAME = 259,              /* PARAM_NAME  */
-    PARAM_VALUE = 260              /* PARAM_VALUE  */
+    LS_COMMAND = 259,              /* LS_COMMAND  */
+    PARAM_NAME = 260,              /* PARAM_NAME  */
+    PARAM_VALUE = 261,             /* PARAM_VALUE  */
+    CMD_SEPARATOR = 262            /* CMD_SEPARATOR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -66,19 +68,21 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define MV_COMMAND 258
-#define PARAM_NAME 259
-#define PARAM_VALUE 260
+#define LS_COMMAND 259
+#define PARAM_NAME 260
+#define PARAM_VALUE 261
+#define CMD_SEPARATOR 262
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 10 "proj.y"
+#line 11 "proj.y"
 
     int intval;
     char* strval;
 
-#line 82 "y.tab.h"
+#line 86 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

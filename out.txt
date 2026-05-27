@@ -1,1 +1,1 @@
-Move-Item -Path ./dummy -Destination /dummy2 -Force dummyvalue
+Move-Item -Path ./dummy -Destination /dummy2 -Force dummyvalue|Get-ChildItem -Recurse C:\Users
