@@ -1,0 +1,10 @@
+Get-Location
+ New-Item -ItemType File -Path testfile.txt
+ Remove-Item -Recurse -Force testfile.txt
+ Select-String -Pattern pattern -Path testfile.txt 
+ Get-Content -n testfile.txt
+ Get-Process 
+ Clear-Host
+ Get-History -Count 10
+ Move-Item -Path path1 -Destination path2 -Force dummyvalue -Force dummyvalue2
+ Get-ChildItem -Recurse -FollowSymlink path
