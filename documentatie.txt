@@ -1,0 +1,130 @@
+================================================================================
+                       AUTOEVALUARE PROIECT LEX & YACC
+================================================================================
+
+1. 1p. Oficiu
+   - Prezent (1p)
+
+2. Text Problema. Cerinte Clare
+   - Nume Proiect: Traducător de Comenzi Unix (Bash) în Windows PowerShell.
+   - Scop: Construirea unui analizor lexical (Lex) și sintactic (Yacc/Bison) care preia un script/linie de comenzi Unix și generează comanda corespunzătoare în PowerShell, păstrând parametrii și structura pipeline-ului.
+   - Cerințe clare:
+     1. Recunoașterea și traducerea a 17 comenzi Unix fundamentale: mv, ls, pwd, touch, rm, grep, cat, ps, clear, history, mkdir, cp, head, pkill, ip, netstat, curl.
+     2. Traducerea recursivă și combinarea opțiunilor/flagurilor specifice fiecărei comenzi Unix în parametrii corespunzători din PowerShell (de ex. `-R` -> `-Recurse`, `-f` -> `-Force`).
+     3. Suport pentru legarea comenzilor în pipeline utilizând operatorul `|` și separarea lor prin newlines `\n`.
+
+3. Complexitate: Partea de Bază & Distanța față de Softuri Existente
+   - Partea de bază include transpunerea comenzilor Unix în cmdlets PowerShell (de ex. `ls` în `Get-ChildItem`), parsarea numelor de parametru (`PARAM_NAME`) și a argumentelor poziționale (`PARAM_VALUE`).
+   - Distanța față de softuri existente: Proiectul realizează o compilare sursă-la-sursă (transpilation) în loc de execuție directă sau interpretare de scripturi (cum ar fi subsistemul WSL sau cygwin/git-bash care doar rulează binare Unix sub Windows).
+   - Link model referință/laborator: https://github.com/nascadan/Proiect_LFT.git (bazat pe exemplul de laborator de transpunere sintactică a instrucțiunilor simple).
+   - Itemi originali:
+     1. Tratarea recursivă a opțiunilor multiple pe ambele părți ale argumentelor poziționale (de ex. `ls -R path` și `ls path -R` funcționează identic).
+     2. Mecanism de anulare a opțiunilor Unix ignorate sau implicite în PowerShell (de ex. convertirea `-a`, `-m` la string-ul gol `""` fără a strica structura de parsare).
+
+4. Complexitate Avansată Explicată Lex/Yacc
+   - Reguli recursive la stânga și la dreapta pentru acumularea opțiunilor (`mv_all_options`, `ls_all_options`, etc.).
+   - Utilizarea directivelor `%right PARAM_NAME` și `%left PARAM_VALUE` în Yacc pentru controlul asocierilor și eliminarea conflictelor shift/reduce în timpul potrivirii argumentelor.
+   - Definirea tokenilor tipizați prin `%union` în Bison pentru a diferenția parametrii text (`strval`) de valori numerice (`intval`) necesare pentru comenzi precum `head` (care preia `-n [int]`).
+   - Rezolvarea ne-greedy a opțiunilor (e.g. evitarea absorbției parametrilor poziționali ca fiind valorile flagurilor anterioare prin eliminarea regulii `PARAM_NAME PARAM_VALUE` pentru flagurile booleene/solitare).
+
+5. Adâncime Arbore de Parsare
+   - Pentru comanda: `ls -R path | grep pattern`
+   - Adâncimea arborelui de parsare: 5 niveluri.
+   - Structura arborelui este salvată în proiect ca imagine: `parse_tree.png`.
+   - Reprezentare textuala a arborelui:
+     [total]
+        |-- [total]
+        |     |-- [line]
+        |           |-- [ls_line]
+        |                 |-- LS_COMMAND ("ls")
+        |                 |-- [ls_all_options] (PARAM_NAME: "-R")
+        |                 |-- PARAM_VALUE ("path")
+        |-- CMD_SEPARATOR ("|")
+        |-- [line]
+              |-- [grep_line]
+                    |-- GREP_COMMAND ("grep")
+                    |-- [grep_args] (PARAM_VALUE: "pattern")
+
+6. Rezolvare Ambiguitate
+   - Problema: Ambiguitate în parsarea parametrilor opționali vs argumente poziționale (deoarece ambele folosesc caractere similare).
+   - Rezolvare: Utilizarea priorităților explicite în Bison (`%right PARAM_NAME` și `%left PARAM_VALUE`) și separarea regulilor gramaticale pentru opțiuni cu valoare (de ex. `head -n 5`) față de opțiuni booleene simple (de ex. `ls -R`).
+
+7. Avantajele Utilizării Gramaticii Alese
+   - Gramatica oferă flexibilitate crescută în ordinea elementelor. Utilizatorul poate plasa flagurile înainte sau după argumentele poziționale (de ex. `mkdir -p dir` vs `mkdir dir -p`), ambele fiind traduse corect în `New-Item -ItemType Directory -Path dir`.
+   - Comparativ cu o simplă potrivire Regex sau o gramatică liniară strictă (de ex. gramatica simplă din lab care impunea exact ordinea `COMANDA OPȚIUNI CALE`), gramatica noastră recursivă Yacc acceptă număr variabil de flaguri și parametri poziționali în orice ordine fără a bloca parserul.
+
+8. Scenariu de Test Principal
+   - Fişier intrare: `in.txt`
+     ```bash
+     ls -R path
+     pwd
+     mkdir -p -v path
+     touch file.txt
+     cp -f file1 file2
+     mv file1 file2
+     rm file1
+     cat file.txt
+     grep pattern file.txt
+     head -n 5 file.txt
+     pkill -9 processName
+     ps
+     ip a
+     netstat -tuln
+     clear
+     history
+     curl -o out.html http://example.com
+     ```
+   - Fişier ieşire: `out.txt`
+     ```powershell
+     Get-ChildItem -Recurse path
+     Get-Location
+     New-Item -ItemType Directory -Path path 
+     New-Item -ItemType File -Path file.txt
+     Copy-Item file1 -Destination file2 -Force
+     Move-Item -Path file1 -Destination file2
+     Remove-Item -Path file1
+     Get-Content -Path file.txt
+     Select-String -Pattern pattern -Path file.txt
+     Get-Content -TotalCount 5 -Path file.txt
+     Stop-Process -Force processName
+     Get-Process
+     Get-NetIpAddress
+     Get-NetTcpConnection
+     Clear-Host
+     Get-History
+     Invoke-WebRequest -Uri http://example.com -OutFile out.html
+     ```
+
+9. Scenarii de Test Suplimentare
+   - Scenariul 2 (Pipes & Comenzi fără opțiuni):
+     - Intrare:
+       ```bash
+       ls | grep pattern
+       cp file1 file2
+       mv source dest
+       ```
+     - Ieşire:
+       ```powershell
+       Get-ChildItem| Select-String -Pattern pattern
+       Copy-Item file1 -Destination file2
+       Move-Item -Path source -Destination dest
+       ```
+   - Scenariul 3 (Flaguri booleene combinate și opțiuni ignorate):
+     - Intrare:
+       ```bash
+       ls -R -d -a path
+       mv -f path1 path2
+       ```
+     - Ieşire:
+       ```powershell
+       Get-ChildItem -Recurse -Directory path
+       Move-Item -Path path1 -Destination path2 -Force
+       ```
+
+10. Concluzii + Îmbunătățiri Propuse
+    - Proiectul oferă un mod robust, determinist și performant de transpunere sintactică între două CLI-uri diferite.
+    - Îmbunătățiri propuse:
+      1. Adăugarea suportului pentru wildcard-uri (de ex. `*`, `?`) și expresii regulate Unix în calea fișierelor.
+      2. Traducerea redirecționărilor de intrare/ieșire (`>`, `>>`, `<`) în operatori echivalenți din PowerShell.
+      3. Mecanism de traducere a variabilelor de mediu (de ex. `$VAR` -> `$env:VAR`).
+================================================================================
