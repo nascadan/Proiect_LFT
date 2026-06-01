@@ -1,1 +1,10 @@
-mv ./dummy /dummy2 -f dummyvalue | ls -R C:\Users
+pwd
+touch testfile.txt
+rm -r -f testfile.txt
+grep -i pattern testfile.txt
+cat -n testfile.txt
+ps -ef
+clear
+history 10
+mv -f dummyvalue -f dummyvalue2 path1 path2
+ls -R -L path

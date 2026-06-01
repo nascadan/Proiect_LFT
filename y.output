@@ -1,0 +1,940 @@
+   0  $accept : total $end
+
+   1  total : line
+   2        | total CMD_SEPARATOR line
+   3        | total CMD_SEPARATOR
+
+   4  line : mv_line
+   5       | ls_line
+   6       | pwd_line
+   7       | touch_line
+   8       | rm_line
+   9       | grep_line
+  10       | cat_line
+  11       | ps_line
+  12       | clear_line
+  13       | history_line
+
+  14  ls_line : LS_COMMAND ls_all_options
+  15          | LS_COMMAND ls_all_options PARAM_VALUE
+  16          | LS_COMMAND PARAM_VALUE ls_all_options
+  17          | LS_COMMAND
+  18          | LS_COMMAND PARAM_VALUE
+
+  19  ls_all_options : PARAM_NAME PARAM_VALUE
+  20                 | PARAM_NAME
+  21                 | PARAM_NAME PARAM_VALUE ls_all_options
+  22                 | PARAM_NAME ls_all_options
+
+  23  mv_line : MV_COMMAND mv_all_options path_dst
+  24          | MV_COMMAND path_dst mv_all_options
+
+  25  path_dst : PARAM_VALUE PARAM_VALUE
+
+  26  mv_all_options : PARAM_NAME PARAM_VALUE
+  27                 | PARAM_NAME
+  28                 | PARAM_NAME PARAM_VALUE mv_all_options
+  29                 | PARAM_NAME mv_all_options
+
+  30  pwd_line : PWD_COMMAND
+  31           | PWD_COMMAND pwd_all_options
+
+  32  pwd_all_options : PARAM_NAME PARAM_VALUE
+  33                  | PARAM_NAME
+  34                  | PARAM_NAME PARAM_VALUE pwd_all_options
+  35                  | PARAM_NAME pwd_all_options
+
+  36  touch_line : TOUCH_COMMAND PARAM_VALUE
+  37             | TOUCH_COMMAND touch_all_options PARAM_VALUE
+  38             | TOUCH_COMMAND PARAM_VALUE touch_all_options
+
+  39  touch_all_options : PARAM_NAME PARAM_VALUE
+  40                    | PARAM_NAME
+  41                    | PARAM_NAME PARAM_VALUE touch_all_options
+  42                    | PARAM_NAME touch_all_options
+
+  43  rm_line : RM_COMMAND PARAM_VALUE
+  44          | RM_COMMAND rm_all_options PARAM_VALUE
+  45          | RM_COMMAND PARAM_VALUE rm_all_options
+
+  46  rm_all_options : PARAM_NAME PARAM_VALUE
+  47                 | PARAM_NAME
+  48                 | PARAM_NAME PARAM_VALUE rm_all_options
+  49                 | PARAM_NAME rm_all_options
+
+  50  grep_line : GREP_COMMAND grep_args
+  51            | GREP_COMMAND grep_all_options grep_args
+  52            | GREP_COMMAND grep_args grep_all_options
+
+  53  grep_args : PARAM_VALUE PARAM_VALUE
+  54            | PARAM_VALUE
+
+  55  grep_all_options : PARAM_NAME PARAM_VALUE
+  56                   | PARAM_NAME
+  57                   | PARAM_NAME PARAM_VALUE grep_all_options
+  58                   | PARAM_NAME grep_all_options
+
+  59  cat_line : CAT_COMMAND
+  60           | CAT_COMMAND PARAM_VALUE
+  61           | CAT_COMMAND cat_all_options PARAM_VALUE
+  62           | CAT_COMMAND PARAM_VALUE cat_all_options
+
+  63  cat_all_options : PARAM_NAME PARAM_VALUE
+  64                  | PARAM_NAME
+  65                  | PARAM_NAME PARAM_VALUE cat_all_options
+  66                  | PARAM_NAME cat_all_options
+
+  67  ps_line : PS_COMMAND
+  68          | PS_COMMAND ps_all_options
+  69          | PS_COMMAND PARAM_VALUE
+
+  70  ps_all_options : PARAM_NAME PARAM_VALUE
+  71                 | PARAM_NAME
+  72                 | PARAM_NAME PARAM_VALUE ps_all_options
+  73                 | PARAM_NAME ps_all_options
+
+  74  clear_line : CLEAR_COMMAND
+
+  75  history_line : HISTORY_COMMAND
+  76               | HISTORY_COMMAND PARAM_VALUE
+
+state 0
+	$accept : . total $end  (0)
+
+	MV_COMMAND  shift 1
+	LS_COMMAND  shift 2
+	PWD_COMMAND  shift 3
+	TOUCH_COMMAND  shift 4
+	RM_COMMAND  shift 5
+	GREP_COMMAND  shift 6
+	CAT_COMMAND  shift 7
+	PS_COMMAND  shift 8
+	CLEAR_COMMAND  shift 9
+	HISTORY_COMMAND  shift 10
+	.  error
+
+	total  goto 11
+	line  goto 12
+	mv_line  goto 13
+	ls_line  goto 14
+	pwd_line  goto 15
+	touch_line  goto 16
+	rm_line  goto 17
+	grep_line  goto 18
+	cat_line  goto 19
+	ps_line  goto 20
+	clear_line  goto 21
+	history_line  goto 22
+
+
+state 1
+	mv_line : MV_COMMAND . mv_all_options path_dst  (23)
+	mv_line : MV_COMMAND . path_dst mv_all_options  (24)
+
+	PARAM_NAME  shift 23
+	PARAM_VALUE  shift 24
+	.  error
+
+	mv_all_options  goto 25
+	path_dst  goto 26
+
+
+state 2
+	ls_line : LS_COMMAND . ls_all_options  (14)
+	ls_line : LS_COMMAND . ls_all_options PARAM_VALUE  (15)
+	ls_line : LS_COMMAND . PARAM_VALUE ls_all_options  (16)
+	ls_line : LS_COMMAND .  (17)
+	ls_line : LS_COMMAND . PARAM_VALUE  (18)
+
+	PARAM_NAME  shift 27
+	PARAM_VALUE  shift 28
+	$end  reduce 17
+	CMD_SEPARATOR  reduce 17
+
+	ls_all_options  goto 29
+
+
+state 3
+	pwd_line : PWD_COMMAND .  (30)
+	pwd_line : PWD_COMMAND . pwd_all_options  (31)
+
+	PARAM_NAME  shift 30
+	$end  reduce 30
+	CMD_SEPARATOR  reduce 30
+
+	pwd_all_options  goto 31
+
+
+state 4
+	touch_line : TOUCH_COMMAND . PARAM_VALUE  (36)
+	touch_line : TOUCH_COMMAND . touch_all_options PARAM_VALUE  (37)
+	touch_line : TOUCH_COMMAND . PARAM_VALUE touch_all_options  (38)
+
+	PARAM_NAME  shift 32
+	PARAM_VALUE  shift 33
+	.  error
+
+	touch_all_options  goto 34
+
+
+state 5
+	rm_line : RM_COMMAND . PARAM_VALUE  (43)
+	rm_line : RM_COMMAND . rm_all_options PARAM_VALUE  (44)
+	rm_line : RM_COMMAND . PARAM_VALUE rm_all_options  (45)
+
+	PARAM_NAME  shift 35
+	PARAM_VALUE  shift 36
+	.  error
+
+	rm_all_options  goto 37
+
+
+state 6
+	grep_line : GREP_COMMAND . grep_args  (50)
+	grep_line : GREP_COMMAND . grep_all_options grep_args  (51)
+	grep_line : GREP_COMMAND . grep_args grep_all_options  (52)
+
+	PARAM_NAME  shift 38
+	PARAM_VALUE  shift 39
+	.  error
+
+	grep_all_options  goto 40
+	grep_args  goto 41
+
+
+state 7
+	cat_line : CAT_COMMAND .  (59)
+	cat_line : CAT_COMMAND . PARAM_VALUE  (60)
+	cat_line : CAT_COMMAND . cat_all_options PARAM_VALUE  (61)
+	cat_line : CAT_COMMAND . PARAM_VALUE cat_all_options  (62)
+
+	PARAM_NAME  shift 42
+	PARAM_VALUE  shift 43
+	$end  reduce 59
+	CMD_SEPARATOR  reduce 59
+
+	cat_all_options  goto 44
+
+
+state 8
+	ps_line : PS_COMMAND .  (67)
+	ps_line : PS_COMMAND . ps_all_options  (68)
+	ps_line : PS_COMMAND . PARAM_VALUE  (69)
+
+	PARAM_NAME  shift 45
+	PARAM_VALUE  shift 46
+	$end  reduce 67
+	CMD_SEPARATOR  reduce 67
+
+	ps_all_options  goto 47
+
+
+state 9
+	clear_line : CLEAR_COMMAND .  (74)
+
+	.  reduce 74
+
+
+state 10
+	history_line : HISTORY_COMMAND .  (75)
+	history_line : HISTORY_COMMAND . PARAM_VALUE  (76)
+
+	PARAM_VALUE  shift 48
+	$end  reduce 75
+	CMD_SEPARATOR  reduce 75
+
+
+state 11
+	$accept : total . $end  (0)
+	total : total . CMD_SEPARATOR line  (2)
+	total : total . CMD_SEPARATOR  (3)
+
+	$end  accept
+	CMD_SEPARATOR  shift 49
+	.  error
+
+
+state 12
+	total : line .  (1)
+
+	.  reduce 1
+
+
+state 13
+	line : mv_line .  (4)
+
+	.  reduce 4
+
+
+state 14
+	line : ls_line .  (5)
+
+	.  reduce 5
+
+
+state 15
+	line : pwd_line .  (6)
+
+	.  reduce 6
+
+
+state 16
+	line : touch_line .  (7)
+
+	.  reduce 7
+
+
+state 17
+	line : rm_line .  (8)
+
+	.  reduce 8
+
+
+state 18
+	line : grep_line .  (9)
+
+	.  reduce 9
+
+
+state 19
+	line : cat_line .  (10)
+
+	.  reduce 10
+
+
+state 20
+	line : ps_line .  (11)
+
+	.  reduce 11
+
+
+state 21
+	line : clear_line .  (12)
+
+	.  reduce 12
+
+
+state 22
+	line : history_line .  (13)
+
+	.  reduce 13
+
+
+state 23
+	mv_all_options : PARAM_NAME . PARAM_VALUE  (26)
+	mv_all_options : PARAM_NAME .  (27)
+	mv_all_options : PARAM_NAME . PARAM_VALUE mv_all_options  (28)
+	mv_all_options : PARAM_NAME . mv_all_options  (29)
+
+	PARAM_NAME  shift 23
+	PARAM_VALUE  shift 50
+	$end  reduce 27
+	CMD_SEPARATOR  reduce 27
+
+	mv_all_options  goto 51
+
+
+state 24
+	path_dst : PARAM_VALUE . PARAM_VALUE  (25)
+
+	PARAM_VALUE  shift 52
+	.  error
+
+
+state 25
+	mv_line : MV_COMMAND mv_all_options . path_dst  (23)
+
+	PARAM_VALUE  shift 24
+	.  error
+
+	path_dst  goto 53
+
+
+state 26
+	mv_line : MV_COMMAND path_dst . mv_all_options  (24)
+
+	PARAM_NAME  shift 23
+	.  error
+
+	mv_all_options  goto 54
+
+
+state 27
+	ls_all_options : PARAM_NAME . PARAM_VALUE  (19)
+	ls_all_options : PARAM_NAME .  (20)
+	ls_all_options : PARAM_NAME . PARAM_VALUE ls_all_options  (21)
+	ls_all_options : PARAM_NAME . ls_all_options  (22)
+
+	PARAM_NAME  shift 27
+	PARAM_VALUE  shift 55
+	$end  reduce 20
+	CMD_SEPARATOR  reduce 20
+
+	ls_all_options  goto 56
+
+
+state 28
+	ls_line : LS_COMMAND PARAM_VALUE . ls_all_options  (16)
+	ls_line : LS_COMMAND PARAM_VALUE .  (18)
+
+	PARAM_NAME  shift 27
+	$end  reduce 18
+	CMD_SEPARATOR  reduce 18
+
+	ls_all_options  goto 57
+
+
+state 29
+	ls_line : LS_COMMAND ls_all_options .  (14)
+	ls_line : LS_COMMAND ls_all_options . PARAM_VALUE  (15)
+
+	PARAM_VALUE  shift 58
+	$end  reduce 14
+	CMD_SEPARATOR  reduce 14
+
+
+state 30
+	pwd_all_options : PARAM_NAME . PARAM_VALUE  (32)
+	pwd_all_options : PARAM_NAME .  (33)
+	pwd_all_options : PARAM_NAME . PARAM_VALUE pwd_all_options  (34)
+	pwd_all_options : PARAM_NAME . pwd_all_options  (35)
+
+	PARAM_NAME  shift 30
+	PARAM_VALUE  shift 59
+	$end  reduce 33
+	CMD_SEPARATOR  reduce 33
+
+	pwd_all_options  goto 60
+
+
+state 31
+	pwd_line : PWD_COMMAND pwd_all_options .  (31)
+
+	.  reduce 31
+
+
+state 32
+	touch_all_options : PARAM_NAME . PARAM_VALUE  (39)
+	touch_all_options : PARAM_NAME .  (40)
+	touch_all_options : PARAM_NAME . PARAM_VALUE touch_all_options  (41)
+	touch_all_options : PARAM_NAME . touch_all_options  (42)
+
+	PARAM_NAME  shift 32
+	PARAM_VALUE  shift 61
+	$end  reduce 40
+	CMD_SEPARATOR  reduce 40
+
+	touch_all_options  goto 62
+
+
+state 33
+	touch_line : TOUCH_COMMAND PARAM_VALUE .  (36)
+	touch_line : TOUCH_COMMAND PARAM_VALUE . touch_all_options  (38)
+
+	PARAM_NAME  shift 32
+	$end  reduce 36
+	CMD_SEPARATOR  reduce 36
+
+	touch_all_options  goto 63
+
+
+state 34
+	touch_line : TOUCH_COMMAND touch_all_options . PARAM_VALUE  (37)
+
+	PARAM_VALUE  shift 64
+	.  error
+
+
+state 35
+	rm_all_options : PARAM_NAME . PARAM_VALUE  (46)
+	rm_all_options : PARAM_NAME .  (47)
+	rm_all_options : PARAM_NAME . PARAM_VALUE rm_all_options  (48)
+	rm_all_options : PARAM_NAME . rm_all_options  (49)
+
+	PARAM_NAME  shift 35
+	PARAM_VALUE  shift 65
+	$end  reduce 47
+	CMD_SEPARATOR  reduce 47
+
+	rm_all_options  goto 66
+
+
+state 36
+	rm_line : RM_COMMAND PARAM_VALUE .  (43)
+	rm_line : RM_COMMAND PARAM_VALUE . rm_all_options  (45)
+
+	PARAM_NAME  shift 35
+	$end  reduce 43
+	CMD_SEPARATOR  reduce 43
+
+	rm_all_options  goto 67
+
+
+state 37
+	rm_line : RM_COMMAND rm_all_options . PARAM_VALUE  (44)
+
+	PARAM_VALUE  shift 68
+	.  error
+
+
+state 38
+	grep_all_options : PARAM_NAME . PARAM_VALUE  (55)
+	grep_all_options : PARAM_NAME .  (56)
+	grep_all_options : PARAM_NAME . PARAM_VALUE grep_all_options  (57)
+	grep_all_options : PARAM_NAME . grep_all_options  (58)
+
+	PARAM_NAME  shift 38
+	PARAM_VALUE  shift 69
+	$end  reduce 56
+	CMD_SEPARATOR  reduce 56
+
+	grep_all_options  goto 70
+
+
+state 39
+	grep_args : PARAM_VALUE . PARAM_VALUE  (53)
+	grep_args : PARAM_VALUE .  (54)
+
+	PARAM_VALUE  shift 71
+	$end  reduce 54
+	PARAM_NAME  reduce 54
+	CMD_SEPARATOR  reduce 54
+
+
+state 40
+	grep_line : GREP_COMMAND grep_all_options . grep_args  (51)
+
+	PARAM_VALUE  shift 39
+	.  error
+
+	grep_args  goto 72
+
+
+state 41
+	grep_line : GREP_COMMAND grep_args .  (50)
+	grep_line : GREP_COMMAND grep_args . grep_all_options  (52)
+
+	PARAM_NAME  shift 38
+	$end  reduce 50
+	CMD_SEPARATOR  reduce 50
+
+	grep_all_options  goto 73
+
+
+state 42
+	cat_all_options : PARAM_NAME . PARAM_VALUE  (63)
+	cat_all_options : PARAM_NAME .  (64)
+	cat_all_options : PARAM_NAME . PARAM_VALUE cat_all_options  (65)
+	cat_all_options : PARAM_NAME . cat_all_options  (66)
+
+	PARAM_NAME  shift 42
+	PARAM_VALUE  shift 74
+	$end  reduce 64
+	CMD_SEPARATOR  reduce 64
+
+	cat_all_options  goto 75
+
+
+state 43
+	cat_line : CAT_COMMAND PARAM_VALUE .  (60)
+	cat_line : CAT_COMMAND PARAM_VALUE . cat_all_options  (62)
+
+	PARAM_NAME  shift 42
+	$end  reduce 60
+	CMD_SEPARATOR  reduce 60
+
+	cat_all_options  goto 76
+
+
+state 44
+	cat_line : CAT_COMMAND cat_all_options . PARAM_VALUE  (61)
+
+	PARAM_VALUE  shift 77
+	.  error
+
+
+state 45
+	ps_all_options : PARAM_NAME . PARAM_VALUE  (70)
+	ps_all_options : PARAM_NAME .  (71)
+	ps_all_options : PARAM_NAME . PARAM_VALUE ps_all_options  (72)
+	ps_all_options : PARAM_NAME . ps_all_options  (73)
+
+	PARAM_NAME  shift 45
+	PARAM_VALUE  shift 78
+	$end  reduce 71
+	CMD_SEPARATOR  reduce 71
+
+	ps_all_options  goto 79
+
+
+state 46
+	ps_line : PS_COMMAND PARAM_VALUE .  (69)
+
+	.  reduce 69
+
+
+state 47
+	ps_line : PS_COMMAND ps_all_options .  (68)
+
+	.  reduce 68
+
+
+state 48
+	history_line : HISTORY_COMMAND PARAM_VALUE .  (76)
+
+	.  reduce 76
+
+
+state 49
+	total : total CMD_SEPARATOR . line  (2)
+	total : total CMD_SEPARATOR .  (3)
+
+	MV_COMMAND  shift 1
+	LS_COMMAND  shift 2
+	PWD_COMMAND  shift 3
+	TOUCH_COMMAND  shift 4
+	RM_COMMAND  shift 5
+	GREP_COMMAND  shift 6
+	CAT_COMMAND  shift 7
+	PS_COMMAND  shift 8
+	CLEAR_COMMAND  shift 9
+	HISTORY_COMMAND  shift 10
+	$end  reduce 3
+	CMD_SEPARATOR  reduce 3
+
+	line  goto 80
+	mv_line  goto 13
+	ls_line  goto 14
+	pwd_line  goto 15
+	touch_line  goto 16
+	rm_line  goto 17
+	grep_line  goto 18
+	cat_line  goto 19
+	ps_line  goto 20
+	clear_line  goto 21
+	history_line  goto 22
+
+
+state 50
+	mv_all_options : PARAM_NAME PARAM_VALUE .  (26)
+	mv_all_options : PARAM_NAME PARAM_VALUE . mv_all_options  (28)
+
+	PARAM_NAME  shift 23
+	$end  reduce 26
+	PARAM_VALUE  reduce 26
+	CMD_SEPARATOR  reduce 26
+
+	mv_all_options  goto 81
+
+
+state 51
+	mv_all_options : PARAM_NAME mv_all_options .  (29)
+
+	.  reduce 29
+
+
+state 52
+	path_dst : PARAM_VALUE PARAM_VALUE .  (25)
+
+	.  reduce 25
+
+
+state 53
+	mv_line : MV_COMMAND mv_all_options path_dst .  (23)
+
+	.  reduce 23
+
+
+state 54
+	mv_line : MV_COMMAND path_dst mv_all_options .  (24)
+
+	.  reduce 24
+
+
+state 55
+	ls_all_options : PARAM_NAME PARAM_VALUE .  (19)
+	ls_all_options : PARAM_NAME PARAM_VALUE . ls_all_options  (21)
+
+	PARAM_NAME  shift 27
+	$end  reduce 19
+	PARAM_VALUE  reduce 19
+	CMD_SEPARATOR  reduce 19
+
+	ls_all_options  goto 82
+
+
+state 56
+	ls_all_options : PARAM_NAME ls_all_options .  (22)
+
+	.  reduce 22
+
+
+state 57
+	ls_line : LS_COMMAND PARAM_VALUE ls_all_options .  (16)
+
+	.  reduce 16
+
+
+state 58
+	ls_line : LS_COMMAND ls_all_options PARAM_VALUE .  (15)
+
+	.  reduce 15
+
+
+state 59
+	pwd_all_options : PARAM_NAME PARAM_VALUE .  (32)
+	pwd_all_options : PARAM_NAME PARAM_VALUE . pwd_all_options  (34)
+
+	PARAM_NAME  shift 30
+	$end  reduce 32
+	CMD_SEPARATOR  reduce 32
+
+	pwd_all_options  goto 83
+
+
+state 60
+	pwd_all_options : PARAM_NAME pwd_all_options .  (35)
+
+	.  reduce 35
+
+
+state 61
+	touch_all_options : PARAM_NAME PARAM_VALUE .  (39)
+	touch_all_options : PARAM_NAME PARAM_VALUE . touch_all_options  (41)
+
+	PARAM_NAME  shift 32
+	$end  reduce 39
+	PARAM_VALUE  reduce 39
+	CMD_SEPARATOR  reduce 39
+
+	touch_all_options  goto 84
+
+
+state 62
+	touch_all_options : PARAM_NAME touch_all_options .  (42)
+
+	.  reduce 42
+
+
+state 63
+	touch_line : TOUCH_COMMAND PARAM_VALUE touch_all_options .  (38)
+
+	.  reduce 38
+
+
+state 64
+	touch_line : TOUCH_COMMAND touch_all_options PARAM_VALUE .  (37)
+
+	.  reduce 37
+
+
+state 65
+	rm_all_options : PARAM_NAME PARAM_VALUE .  (46)
+	rm_all_options : PARAM_NAME PARAM_VALUE . rm_all_options  (48)
+
+	PARAM_NAME  shift 35
+	$end  reduce 46
+	PARAM_VALUE  reduce 46
+	CMD_SEPARATOR  reduce 46
+
+	rm_all_options  goto 85
+
+
+state 66
+	rm_all_options : PARAM_NAME rm_all_options .  (49)
+
+	.  reduce 49
+
+
+state 67
+	rm_line : RM_COMMAND PARAM_VALUE rm_all_options .  (45)
+
+	.  reduce 45
+
+
+state 68
+	rm_line : RM_COMMAND rm_all_options PARAM_VALUE .  (44)
+
+	.  reduce 44
+
+
+state 69
+	grep_all_options : PARAM_NAME PARAM_VALUE .  (55)
+	grep_all_options : PARAM_NAME PARAM_VALUE . grep_all_options  (57)
+
+	PARAM_NAME  shift 38
+	$end  reduce 55
+	PARAM_VALUE  reduce 55
+	CMD_SEPARATOR  reduce 55
+
+	grep_all_options  goto 86
+
+
+state 70
+	grep_all_options : PARAM_NAME grep_all_options .  (58)
+
+	.  reduce 58
+
+
+state 71
+	grep_args : PARAM_VALUE PARAM_VALUE .  (53)
+
+	.  reduce 53
+
+
+state 72
+	grep_line : GREP_COMMAND grep_all_options grep_args .  (51)
+
+	.  reduce 51
+
+
+state 73
+	grep_line : GREP_COMMAND grep_args grep_all_options .  (52)
+
+	.  reduce 52
+
+
+state 74
+	cat_all_options : PARAM_NAME PARAM_VALUE .  (63)
+	cat_all_options : PARAM_NAME PARAM_VALUE . cat_all_options  (65)
+
+	PARAM_NAME  shift 42
+	$end  reduce 63
+	PARAM_VALUE  reduce 63
+	CMD_SEPARATOR  reduce 63
+
+	cat_all_options  goto 87
+
+
+state 75
+	cat_all_options : PARAM_NAME cat_all_options .  (66)
+
+	.  reduce 66
+
+
+state 76
+	cat_line : CAT_COMMAND PARAM_VALUE cat_all_options .  (62)
+
+	.  reduce 62
+
+
+state 77
+	cat_line : CAT_COMMAND cat_all_options PARAM_VALUE .  (61)
+
+	.  reduce 61
+
+
+state 78
+	ps_all_options : PARAM_NAME PARAM_VALUE .  (70)
+	ps_all_options : PARAM_NAME PARAM_VALUE . ps_all_options  (72)
+
+	PARAM_NAME  shift 45
+	$end  reduce 70
+	CMD_SEPARATOR  reduce 70
+
+	ps_all_options  goto 88
+
+
+state 79
+	ps_all_options : PARAM_NAME ps_all_options .  (73)
+
+	.  reduce 73
+
+
+state 80
+	total : total CMD_SEPARATOR line .  (2)
+
+	.  reduce 2
+
+
+state 81
+	mv_all_options : PARAM_NAME PARAM_VALUE mv_all_options .  (28)
+
+	.  reduce 28
+
+
+state 82
+	ls_all_options : PARAM_NAME PARAM_VALUE ls_all_options .  (21)
+
+	.  reduce 21
+
+
+state 83
+	pwd_all_options : PARAM_NAME PARAM_VALUE pwd_all_options .  (34)
+
+	.  reduce 34
+
+
+state 84
+	touch_all_options : PARAM_NAME PARAM_VALUE touch_all_options .  (41)
+
+	.  reduce 41
+
+
+state 85
+	rm_all_options : PARAM_NAME PARAM_VALUE rm_all_options .  (48)
+
+	.  reduce 48
+
+
+state 86
+	grep_all_options : PARAM_NAME PARAM_VALUE grep_all_options .  (57)
+
+	.  reduce 57
+
+
+state 87
+	cat_all_options : PARAM_NAME PARAM_VALUE cat_all_options .  (65)
+
+	.  reduce 65
+
+
+state 88
+	ps_all_options : PARAM_NAME PARAM_VALUE ps_all_options .  (72)
+
+	.  reduce 72
+
+
+15 terminals, 23 nonterminals
+77 grammar rules, 89 states
+
+grammar parser grammar
+symbol# value# symbol
+     0      0  $end
+     1    256  error
+     2    257  MV_COMMAND
+     3    258  LS_COMMAND
+     4    259  PWD_COMMAND
+     5    260  TOUCH_COMMAND
+     6    261  RM_COMMAND
+     7    262  GREP_COMMAND
+     8    263  CAT_COMMAND
+     9    264  PS_COMMAND
+    10    265  CLEAR_COMMAND
+    11    266  HISTORY_COMMAND
+    12    267  PARAM_NAME
+    13    268  PARAM_VALUE
+    14    269  CMD_SEPARATOR
+    15    270  $accept
+    16    271  total
+    17    272  mv_all_options
+    18    273  line
+    19    274  path_dst
+    20    275  mv_line
+    21    276  ls_line
+    22    277  ls_all_options
+    23    278  pwd_line
+    24    279  pwd_all_options
+    25    280  touch_line
+    26    281  touch_all_options
+    27    282  rm_line
+    28    283  rm_all_options
+    29    284  grep_line
+    30    285  grep_all_options
+    31    286  grep_args
+    32    287  cat_line
+    33    288  cat_all_options
+    34    289  ps_line
+    35    290  ps_all_options
+    36    291  clear_line
+    37    292  history_line
