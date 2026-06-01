@@ -1,1 +1,7 @@
-Move-Item -Path ./dummy -Destination /dummy2 -Force dummyvalue|Get-ChildItem -Recurse C:\Users
+Move-Item -Path ./dummy -Destination /dummy2 -Force dummyvalue| Get-ChildItem -Recurse C:\Users
+ New-Item -Path .\luceafarul\catalina -ItemType Directory  
+ Copy-Item ./file1 -Destination ./destination/files -Recurse -Force -Recurse
+ Get-Content -Encoding Byte -Tail 10 -Path ./file ./bruhhh
+ Stop-Process -Force minecraft
+ Get-NetIpAddress
+ Invoke-WebRequest -Uri youtube.com -InFile ./fileToTransfer -UserAgent doncorleone

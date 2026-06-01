@@ -76,8 +76,13 @@ int yylex();
 int yyerror(char*);
 void convertMVParamName(char*, char*);
 void convertLSParamName(char*, char*);
+void convertMKDIRParamName(char*, char*);
+void convertCPParamName(char*, char*);
+void convertHeadParams(char*, int, char*);
+void convertPKILLParamName(char*, char*);
+void convertCURLParamName(char*, char*);
 
-#line 81 "y.tab.c"
+#line 86 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -123,9 +128,18 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     MV_COMMAND = 258,              /* MV_COMMAND  */
     LS_COMMAND = 259,              /* LS_COMMAND  */
-    PARAM_NAME = 260,              /* PARAM_NAME  */
-    PARAM_VALUE = 261,             /* PARAM_VALUE  */
-    CMD_SEPARATOR = 262            /* CMD_SEPARATOR  */
+    MKDIR_COMMAND = 260,           /* MKDIR_COMMAND  */
+    CP_COMMAND = 261,              /* CP_COMMAND  */
+    HEAD_COMMAND = 262,            /* HEAD_COMMAND  */
+    PKILL_COMMAND = 263,           /* PKILL_COMMAND  */
+    IP_COMMAND = 264,              /* IP_COMMAND  */
+    NETSTAT_COMMAND = 265,         /* NETSTAT_COMMAND  */
+    CURL_COMMAND = 266,            /* CURL_COMMAND  */
+    PARAM_NAME = 267,              /* PARAM_NAME  */
+    PARAM_VALUE = 268,             /* PARAM_VALUE  */
+    CMD_SEPARATOR = 269,           /* CMD_SEPARATOR  */
+    HEAD_PARAM = 270,              /* HEAD_PARAM  */
+    INT_VALUE = 271                /* INT_VALUE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -136,20 +150,29 @@ extern int yydebug;
 #define YYUNDEF 257
 #define MV_COMMAND 258
 #define LS_COMMAND 259
-#define PARAM_NAME 260
-#define PARAM_VALUE 261
-#define CMD_SEPARATOR 262
+#define MKDIR_COMMAND 260
+#define CP_COMMAND 261
+#define HEAD_COMMAND 262
+#define PKILL_COMMAND 263
+#define IP_COMMAND 264
+#define NETSTAT_COMMAND 265
+#define CURL_COMMAND 266
+#define PARAM_NAME 267
+#define PARAM_VALUE 268
+#define CMD_SEPARATOR 269
+#define HEAD_PARAM 270
+#define INT_VALUE 271
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 11 "proj.y"
+#line 16 "proj.y"
 
     int intval;
     char* strval;
 
-#line 153 "y.tab.c"
+#line 176 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -174,17 +197,44 @@ enum yysymbol_kind_t
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_MV_COMMAND = 3,                 /* MV_COMMAND  */
   YYSYMBOL_LS_COMMAND = 4,                 /* LS_COMMAND  */
-  YYSYMBOL_PARAM_NAME = 5,                 /* PARAM_NAME  */
-  YYSYMBOL_PARAM_VALUE = 6,                /* PARAM_VALUE  */
-  YYSYMBOL_CMD_SEPARATOR = 7,              /* CMD_SEPARATOR  */
-  YYSYMBOL_YYACCEPT = 8,                   /* $accept  */
-  YYSYMBOL_total = 9,                      /* total  */
-  YYSYMBOL_line = 10,                      /* line  */
-  YYSYMBOL_ls_line = 11,                   /* ls_line  */
-  YYSYMBOL_ls_all_options = 12,            /* ls_all_options  */
-  YYSYMBOL_mv_line = 13,                   /* mv_line  */
-  YYSYMBOL_path_dst = 14,                  /* path_dst  */
-  YYSYMBOL_mv_all_options = 15             /* mv_all_options  */
+  YYSYMBOL_MKDIR_COMMAND = 5,              /* MKDIR_COMMAND  */
+  YYSYMBOL_CP_COMMAND = 6,                 /* CP_COMMAND  */
+  YYSYMBOL_HEAD_COMMAND = 7,               /* HEAD_COMMAND  */
+  YYSYMBOL_PKILL_COMMAND = 8,              /* PKILL_COMMAND  */
+  YYSYMBOL_IP_COMMAND = 9,                 /* IP_COMMAND  */
+  YYSYMBOL_NETSTAT_COMMAND = 10,           /* NETSTAT_COMMAND  */
+  YYSYMBOL_CURL_COMMAND = 11,              /* CURL_COMMAND  */
+  YYSYMBOL_PARAM_NAME = 12,                /* PARAM_NAME  */
+  YYSYMBOL_PARAM_VALUE = 13,               /* PARAM_VALUE  */
+  YYSYMBOL_CMD_SEPARATOR = 14,             /* CMD_SEPARATOR  */
+  YYSYMBOL_HEAD_PARAM = 15,                /* HEAD_PARAM  */
+  YYSYMBOL_INT_VALUE = 16,                 /* INT_VALUE  */
+  YYSYMBOL_YYACCEPT = 17,                  /* $accept  */
+  YYSYMBOL_total = 18,                     /* total  */
+  YYSYMBOL_line = 19,                      /* line  */
+  YYSYMBOL_ls_line = 20,                   /* ls_line  */
+  YYSYMBOL_ls_all_options = 21,            /* ls_all_options  */
+  YYSYMBOL_mkdir_line = 22,                /* mkdir_line  */
+  YYSYMBOL_mkdir_all_options = 23,         /* mkdir_all_options  */
+  YYSYMBOL_cp_line = 24,                   /* cp_line  */
+  YYSYMBOL_cp_file_dest = 25,              /* cp_file_dest  */
+  YYSYMBOL_cp_all_options = 26,            /* cp_all_options  */
+  YYSYMBOL_head_line = 27,                 /* head_line  */
+  YYSYMBOL_head_all_paths = 28,            /* head_all_paths  */
+  YYSYMBOL_head_all_options = 29,          /* head_all_options  */
+  YYSYMBOL_pkill_line = 30,                /* pkill_line  */
+  YYSYMBOL_pkill_all_options = 31,         /* pkill_all_options  */
+  YYSYMBOL_pkill_param = 32,               /* pkill_param  */
+  YYSYMBOL_ip_line = 33,                   /* ip_line  */
+  YYSYMBOL_ip_all_options = 34,            /* ip_all_options  */
+  YYSYMBOL_netstat_line = 35,              /* netstat_line  */
+  YYSYMBOL_netstat_arg = 36,               /* netstat_arg  */
+  YYSYMBOL_netstat_all_options = 37,       /* netstat_all_options  */
+  YYSYMBOL_curl_line = 38,                 /* curl_line  */
+  YYSYMBOL_curl_all_options = 39,          /* curl_all_options  */
+  YYSYMBOL_mv_line = 40,                   /* mv_line  */
+  YYSYMBOL_path_dst = 41,                  /* path_dst  */
+  YYSYMBOL_mv_all_options = 42             /* mv_all_options  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -510,21 +560,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  14
+#define YYFINAL  51
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   25
+#define YYLAST   86
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  8
+#define YYNTOKENS  17
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  8
+#define YYNNTS  26
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  19
+#define YYNRULES  68
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  28
+#define YYNSTATES  95
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   262
+#define YYMAXUTOK   271
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -564,15 +614,21 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    23,    23,    24,    27,    28,    30,    36,    41,    48,
-      55,    60,    67,    76,    81,    87,    94,   101,   106,   113
+       0,    29,    29,    30,    33,    34,    35,    36,    37,    38,
+      39,    40,    41,    45,    51,    56,    63,    70,    75,    82,
+      92,    97,   104,   114,   119,   129,   140,   145,   152,   159,
+     169,   174,   184,   195,   201,   202,   209,   216,   223,   231,
+     236,   243,   250,   257,   264,   273,   276,   284,   289,   296,
+     297,   301,   308,   309,   312,   313,   317,   322,   329,   336,
+     341,   348,   358,   363,   369,   376,   386,   391,   401
 };
 #endif
 
@@ -589,9 +645,15 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "MV_COMMAND",
-  "LS_COMMAND", "PARAM_NAME", "PARAM_VALUE", "CMD_SEPARATOR", "$accept",
-  "total", "line", "ls_line", "ls_all_options", "mv_line", "path_dst",
-  "mv_all_options", YY_NULLPTR
+  "LS_COMMAND", "MKDIR_COMMAND", "CP_COMMAND", "HEAD_COMMAND",
+  "PKILL_COMMAND", "IP_COMMAND", "NETSTAT_COMMAND", "CURL_COMMAND",
+  "PARAM_NAME", "PARAM_VALUE", "CMD_SEPARATOR", "HEAD_PARAM", "INT_VALUE",
+  "$accept", "total", "line", "ls_line", "ls_all_options", "mkdir_line",
+  "mkdir_all_options", "cp_line", "cp_file_dest", "cp_all_options",
+  "head_line", "head_all_paths", "head_all_options", "pkill_line",
+  "pkill_all_options", "pkill_param", "ip_line", "ip_all_options",
+  "netstat_line", "netstat_arg", "netstat_all_options", "curl_line",
+  "curl_all_options", "mv_line", "path_dst", "mv_all_options", YY_NULLPTR
 };
 
 static const char *
@@ -601,7 +663,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-12)
+#define YYPACT_NINF (-43)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -615,9 +677,16 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       3,     8,    10,     5,   -12,   -12,   -12,    12,    -3,     4,
-       2,    14,    16,    17,   -12,     3,     4,   -12,   -12,   -12,
-     -12,    16,   -12,   -12,   -12,   -12,   -12,   -12
+      10,    32,    34,    36,    38,    19,    14,    40,    12,    42,
+      11,   -43,   -43,   -43,   -43,   -43,   -43,   -43,   -43,   -43,
+     -43,    44,     9,    21,    53,    46,    55,    56,    48,    58,
+      59,    50,    60,    62,    63,    19,     7,    64,   -43,   -43,
+     -43,   -43,    16,    66,   -43,    67,    12,    68,    52,    70,
+      71,   -43,    10,    21,   -43,   -43,   -43,   -43,    55,   -43,
+     -43,   -43,    58,   -43,   -43,   -43,    62,   -43,   -43,   -43,
+     -43,   -43,    19,    64,   -43,    27,   -43,   -43,   -43,   -43,
+     -43,   -43,    70,   -43,   -43,   -43,   -43,   -43,   -43,   -43,
+     -43,   -43,   -43,   -43,   -43
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -625,21 +694,32 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     2,     5,     4,    17,     0,     0,
-       0,    10,     0,     6,     1,     0,    16,    19,    15,    14,
-      13,     9,    12,     8,     7,     3,    18,    11
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     2,     5,     6,     7,     8,     9,    10,    11,    12,
+       4,    66,     0,     0,     0,    17,     0,    13,    23,     0,
+       0,    30,     0,     0,     0,     0,     0,     0,    45,    39,
+      46,    40,    42,    49,    47,     0,    54,    53,    59,     0,
+       0,     1,     0,    65,    68,    64,    63,    62,    16,    19,
+      15,    14,    22,    25,    21,    20,    29,    32,    28,    27,
+      26,    38,    36,    34,    33,    41,    44,    50,    48,    55,
+      52,    51,    58,    61,    57,    56,     3,    67,    18,    24,
+      31,    37,    35,    43,    60
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -12,   -12,     7,   -12,   -11,   -12,    15,    -5
+     -43,   -43,    23,   -43,   -17,   -43,   -24,   -43,    37,   -30,
+     -43,    -5,   -35,   -43,   -40,   -43,   -43,    43,   -43,   -43,
+      33,   -43,   -42,   -43,    61,   -11
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     3,     4,     5,    13,     6,     9,    10
+       0,    10,    11,    12,    27,    13,    30,    14,    33,    34,
+      15,    74,    37,    16,    41,    42,    17,    45,    18,    81,
+      47,    19,    50,    20,    23,    24
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -647,39 +727,68 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      22,    23,    17,    18,    19,    14,     1,     2,     8,     7,
-      27,    26,    15,     7,     8,    11,    12,     7,    16,    11,
-      21,    11,    25,    24,     0,    20
+      71,    67,    76,    69,    63,    64,    83,    84,    59,    60,
+      54,    51,    56,     1,     2,     3,     4,     5,     6,     7,
+       8,     9,    55,    72,    46,    52,    38,    39,    38,    75,
+      40,    35,    40,    21,    36,    93,    90,    91,    89,    38,
+      94,    88,    87,    40,    21,    22,    25,    26,    28,    29,
+      31,    32,    43,    44,    48,    49,    21,    53,    25,    58,
+      28,    62,    31,    66,    48,    82,    22,    25,    92,    61,
+      28,    70,    65,    68,    31,    86,    32,    73,    43,    79,
+      78,    80,    48,     0,    85,    57,    77
 };
 
 static const yytype_int8 yycheck[] =
 {
-      11,    12,     7,     6,     9,     0,     3,     4,     6,     5,
-      21,    16,     7,     5,     6,     5,     6,     5,     6,     5,
-       6,     5,    15,     6,    -1,    10
+      35,    31,    42,    33,    28,    29,    48,    49,    25,    26,
+      21,     0,    23,     3,     4,     5,     6,     7,     8,     9,
+      10,    11,    13,    16,    12,    14,    12,    13,    12,    13,
+      16,    12,    16,    12,    15,    75,    66,    72,    62,    12,
+      82,    58,    53,    16,    12,    13,    12,    13,    12,    13,
+      12,    13,    12,    13,    12,    13,    12,    13,    12,    13,
+      12,    13,    12,    13,    12,    13,    13,    12,    73,    13,
+      12,    34,    13,    13,    12,    52,    13,    13,    12,    46,
+      13,    13,    12,    -1,    13,    24,    43
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     9,    10,    11,    13,     5,     6,    14,
-      15,     5,     6,    12,     0,     7,     6,    15,     6,    15,
-      14,     6,    12,    12,     6,    10,    15,    12
+       0,     3,     4,     5,     6,     7,     8,     9,    10,    11,
+      18,    19,    20,    22,    24,    27,    30,    33,    35,    38,
+      40,    12,    13,    41,    42,    12,    13,    21,    12,    13,
+      23,    12,    13,    25,    26,    12,    15,    29,    12,    13,
+      16,    31,    32,    12,    13,    34,    12,    37,    12,    13,
+      39,     0,    14,    13,    42,    13,    42,    41,    13,    21,
+      21,    13,    13,    23,    23,    13,    13,    26,    13,    26,
+      25,    29,    16,    13,    28,    13,    31,    34,    13,    37,
+      13,    36,    13,    39,    39,    13,    19,    42,    21,    23,
+      26,    29,    28,    31,    39
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     8,     9,     9,    10,    10,    11,    11,    11,    12,
-      12,    12,    12,    13,    13,    14,    15,    15,    15,    15
+       0,    17,    18,    18,    19,    19,    19,    19,    19,    19,
+      19,    19,    19,    20,    20,    20,    21,    21,    21,    21,
+      22,    22,    23,    23,    23,    23,    24,    24,    25,    26,
+      26,    26,    26,    27,    28,    28,    29,    29,    29,    30,
+      30,    31,    31,    31,    31,    32,    32,    33,    33,    34,
+      34,    35,    36,    36,    37,    37,    38,    38,    39,    39,
+      39,    39,    40,    40,    41,    42,    42,    42,    42
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     3,     1,     1,     2,     3,     3,     2,
-       1,     3,     2,     3,     3,     2,     2,     1,     3,     2
+       0,     2,     1,     3,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     2,     3,     3,     2,     1,     3,     2,
+       3,     3,     2,     1,     3,     2,     3,     3,     2,     2,
+       1,     3,     2,     3,     1,     2,     2,     3,     2,     2,
+       2,     2,     1,     3,     2,     1,     1,     2,     3,     1,
+       2,     3,     1,     0,     1,     2,     3,     3,     2,     1,
+       3,     2,     3,     3,     2,     2,     1,     3,     2
 };
 
 
@@ -1143,49 +1252,49 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* total: line  */
-#line 23 "proj.y"
+#line 29 "proj.y"
                                             { printf("%s", (yyvsp[0].strval)); free((yyvsp[0].strval)); }
-#line 1149 "y.tab.c"
+#line 1258 "y.tab.c"
     break;
 
   case 3: /* total: total CMD_SEPARATOR line  */
-#line 24 "proj.y"
-                                            { printf("%s%s", (yyvsp[-1].strval), (yyvsp[0].strval)); free((yyvsp[0].strval)); free((yyvsp[-1].strval)); }
-#line 1155 "y.tab.c"
+#line 30 "proj.y"
+                                            { printf("%s %s", (yyvsp[-1].strval), (yyvsp[0].strval)); free((yyvsp[0].strval)); free((yyvsp[-1].strval)); }
+#line 1264 "y.tab.c"
     break;
 
-  case 6: /* ls_line: LS_COMMAND ls_all_options  */
-#line 30 "proj.y"
+  case 13: /* ls_line: LS_COMMAND ls_all_options  */
+#line 45 "proj.y"
                                                                 {
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-ChildItem %s", (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1165 "y.tab.c"
+#line 1274 "y.tab.c"
     break;
 
-  case 7: /* ls_line: LS_COMMAND ls_all_options PARAM_VALUE  */
-#line 36 "proj.y"
+  case 14: /* ls_line: LS_COMMAND ls_all_options PARAM_VALUE  */
+#line 51 "proj.y"
                                                                   {
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-ChildItem -Path %s %s", (yyvsp[0].strval), (yyvsp[-1].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1175 "y.tab.c"
+#line 1284 "y.tab.c"
     break;
 
-  case 8: /* ls_line: LS_COMMAND PARAM_VALUE ls_all_options  */
-#line 41 "proj.y"
+  case 15: /* ls_line: LS_COMMAND PARAM_VALUE ls_all_options  */
+#line 56 "proj.y"
                                                                 {
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-ChildItem %s %s", (yyvsp[-1].strval), (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1185 "y.tab.c"
+#line 1294 "y.tab.c"
     break;
 
-  case 9: /* ls_all_options: PARAM_NAME PARAM_VALUE  */
-#line 48 "proj.y"
+  case 16: /* ls_all_options: PARAM_NAME PARAM_VALUE  */
+#line 63 "proj.y"
                                                                    {
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName((yyvsp[-1].strval), intermediar);
@@ -1193,75 +1302,511 @@ yyreduce:
                                                                     sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1197 "y.tab.c"
+#line 1306 "y.tab.c"
     break;
 
-  case 10: /* ls_all_options: PARAM_NAME  */
-#line 55 "proj.y"
+  case 17: /* ls_all_options: PARAM_NAME  */
+#line 70 "proj.y"
                                                                 {
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName((yyvsp[0].strval), intermediar);
                                                                     (yyval.strval) = strdup(intermediar);
                                                                 }
-#line 1207 "y.tab.c"
+#line 1316 "y.tab.c"
     break;
 
-  case 11: /* ls_all_options: PARAM_NAME PARAM_VALUE ls_all_options  */
-#line 60 "proj.y"
+  case 18: /* ls_all_options: PARAM_NAME PARAM_VALUE ls_all_options  */
+#line 75 "proj.y"
                                                                   {
+                                                                    char intermediar[128] = "";
+                                                                    convertLSParamName((yyvsp[-2].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s %s", intermediar, (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1328 "y.tab.c"
+    break;
+
+  case 19: /* ls_all_options: PARAM_NAME ls_all_options  */
+#line 82 "proj.y"
+                                                                   {
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName((yyvsp[-1].strval), intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s %s", (yyvsp[-2].strval), intermediar, (yyvsp[0].strval));
+                                                                    sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1219 "y.tab.c"
+#line 1340 "y.tab.c"
     break;
 
-  case 12: /* ls_all_options: PARAM_NAME ls_all_options  */
-#line 67 "proj.y"
+  case 20: /* mkdir_line: MKDIR_COMMAND mkdir_all_options PARAM_VALUE  */
+#line 92 "proj.y"
+                                                                      {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "New-Item -ItemType Directory -Path %s %s", (yyvsp[0].strval), (yyvsp[-1].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1350 "y.tab.c"
+    break;
+
+  case 21: /* mkdir_line: MKDIR_COMMAND PARAM_VALUE mkdir_all_options  */
+#line 97 "proj.y"
+                                                                      {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "New-Item -Path %s -ItemType Directory %s", (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1360 "y.tab.c"
+    break;
+
+  case 22: /* mkdir_all_options: PARAM_NAME PARAM_VALUE  */
+#line 104 "proj.y"
+                                                                      {
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName((yyvsp[-1].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1375 "y.tab.c"
+    break;
+
+  case 23: /* mkdir_all_options: PARAM_NAME  */
+#line 114 "proj.y"
+                                                                {
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName((yyvsp[0].strval), intermediar);
+                                                                    (yyval.strval) = strdup(intermediar);
+                                                                }
+#line 1385 "y.tab.c"
+    break;
+
+  case 24: /* mkdir_all_options: PARAM_NAME PARAM_VALUE mkdir_all_options  */
+#line 119 "proj.y"
+                                                                     {
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName((yyvsp[-2].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", (yyvsp[0].strval));
+                                                                    else
+                                                                        sprintf(result, "%s %s %s", intermediar, (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1400 "y.tab.c"
+    break;
+
+  case 25: /* mkdir_all_options: PARAM_NAME mkdir_all_options  */
+#line 129 "proj.y"
+                                                                      {
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName((yyvsp[-1].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1412 "y.tab.c"
+    break;
+
+  case 26: /* cp_line: CP_COMMAND cp_all_options cp_file_dest  */
+#line 140 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Copy-Item %s %s", (yyvsp[0].strval), (yyvsp[-1].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1422 "y.tab.c"
+    break;
+
+  case 27: /* cp_line: CP_COMMAND cp_file_dest cp_all_options  */
+#line 145 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Copy-Item %s %s", (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1432 "y.tab.c"
+    break;
+
+  case 28: /* cp_file_dest: PARAM_VALUE PARAM_VALUE  */
+#line 152 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "%s -Destination %s", (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1442 "y.tab.c"
+    break;
+
+  case 29: /* cp_all_options: PARAM_NAME PARAM_VALUE  */
+#line 159 "proj.y"
                                                                    {
                                                                     char intermediar[128] = "";
-                                                                    convertLSParamName((yyvsp[0].strval), intermediar);
+                                                                    convertCPParamName((yyvsp[-1].strval), intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", (yyvsp[-1].strval), intermediar);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1231 "y.tab.c"
+#line 1457 "y.tab.c"
     break;
 
-  case 13: /* mv_line: MV_COMMAND mv_all_options path_dst  */
-#line 76 "proj.y"
+  case 30: /* cp_all_options: PARAM_NAME  */
+#line 169 "proj.y"
+                                                                {
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName((yyvsp[0].strval), intermediar);
+                                                                    (yyval.strval) = strdup(intermediar);
+                                                                }
+#line 1467 "y.tab.c"
+    break;
+
+  case 31: /* cp_all_options: PARAM_NAME PARAM_VALUE cp_all_options  */
+#line 174 "proj.y"
+                                                                  {
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName((yyvsp[-2].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", (yyvsp[0].strval));
+                                                                    else
+                                                                        sprintf(result, "%s %s %s", intermediar, (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1482 "y.tab.c"
+    break;
+
+  case 32: /* cp_all_options: PARAM_NAME cp_all_options  */
+#line 184 "proj.y"
+                                                                   {
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName((yyvsp[-1].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1494 "y.tab.c"
+    break;
+
+  case 33: /* head_line: HEAD_COMMAND head_all_options head_all_paths  */
+#line 195 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Get-Content %s -Path %s", (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1504 "y.tab.c"
+    break;
+
+  case 34: /* head_all_paths: PARAM_VALUE  */
+#line 201 "proj.y"
+                                                                { (yyval.strval) = strdup((yyvsp[0].strval)); }
+#line 1510 "y.tab.c"
+    break;
+
+  case 35: /* head_all_paths: PARAM_VALUE head_all_paths  */
+#line 202 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result,"%s %s", (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1520 "y.tab.c"
+    break;
+
+  case 36: /* head_all_options: HEAD_PARAM INT_VALUE  */
+#line 209 "proj.y"
+                                                            {
+                                                                    char* result = malloc(256);
+                                                                    char intermediar[128] = "";
+                                                                    convertHeadParams((yyvsp[-1].strval), (yyvsp[0].intval), intermediar);
+                                                                    strcpy(result, intermediar);
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1532 "y.tab.c"
+    break;
+
+  case 37: /* head_all_options: HEAD_PARAM INT_VALUE head_all_options  */
+#line 216 "proj.y"
+                                                              {
+                                                                    char* result = malloc(512);
+                                                                    char intermediar[128] = "";
+                                                                    convertHeadParams((yyvsp[-2].strval), (yyvsp[-1].intval), intermediar);
+                                                                    sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1544 "y.tab.c"
+    break;
+
+  case 38: /* head_all_options: PARAM_NAME head_all_options  */
+#line 223 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "%s", (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1554 "y.tab.c"
+    break;
+
+  case 39: /* pkill_line: PKILL_COMMAND PARAM_VALUE  */
+#line 231 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Stop-Process %s", (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1564 "y.tab.c"
+    break;
+
+  case 40: /* pkill_line: PKILL_COMMAND pkill_all_options  */
+#line 236 "proj.y"
+                                                                {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Stop-Process %s", (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1574 "y.tab.c"
+    break;
+
+  case 41: /* pkill_all_options: pkill_param PARAM_VALUE  */
+#line 243 "proj.y"
+                                                                 {
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName((yyvsp[-1].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1586 "y.tab.c"
+    break;
+
+  case 42: /* pkill_all_options: pkill_param  */
+#line 250 "proj.y"
+                                                                 {
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName((yyvsp[0].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s", intermediar);
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1598 "y.tab.c"
+    break;
+
+  case 43: /* pkill_all_options: pkill_param PARAM_VALUE pkill_all_options  */
+#line 257 "proj.y"
+                                                                 {
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName((yyvsp[-2].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s %s", intermediar, (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1610 "y.tab.c"
+    break;
+
+  case 44: /* pkill_all_options: pkill_param pkill_all_options  */
+#line 264 "proj.y"
+                                                                 {
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName((yyvsp[-1].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1622 "y.tab.c"
+    break;
+
+  case 45: /* pkill_param: PARAM_NAME  */
+#line 273 "proj.y"
+                                                                {
+                                                                    (yyval.strval) = strdup((yyvsp[0].strval));
+                                                                }
+#line 1630 "y.tab.c"
+    break;
+
+  case 46: /* pkill_param: INT_VALUE  */
+#line 276 "proj.y"
+                                                                {
+                                                                    char* conversion = malloc(10);
+                                                                    sprintf(conversion, "%d", (yyvsp[0].intval));
+                                                                    (yyval.strval) = conversion;
+                                                                }
+#line 1640 "y.tab.c"
+    break;
+
+  case 47: /* ip_line: IP_COMMAND PARAM_VALUE  */
+#line 284 "proj.y"
+                                                                {
+                                                                    char* result = malloc(20);
+                                                                    strcpy(result, "Get-NetIpAddress");
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1650 "y.tab.c"
+    break;
+
+  case 48: /* ip_line: IP_COMMAND ip_all_options PARAM_VALUE  */
+#line 289 "proj.y"
+                                                                {
+                                                                    char* result = malloc(20);
+                                                                    strcpy(result, "Get-NetIpAddress");
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1660 "y.tab.c"
+    break;
+
+  case 51: /* netstat_line: NETSTAT_COMMAND netstat_all_options netstat_arg  */
+#line 301 "proj.y"
+                                                                    {
+                                                                        char* result = malloc(22);
+                                                                        strcpy(result, "Get-NetTcpConnection");
+                                                                        (yyval.strval) = result;
+                                                                    }
+#line 1670 "y.tab.c"
+    break;
+
+  case 56: /* curl_line: CURL_COMMAND curl_all_options PARAM_VALUE  */
+#line 317 "proj.y"
+                                                                    {
+                                                                        char* result = malloc(512);
+                                                                        sprintf(result, "Invoke-WebRequest -Uri %s %s", (yyvsp[0].strval), (yyvsp[-1].strval));
+                                                                        (yyval.strval) = result;
+                                                                    }
+#line 1680 "y.tab.c"
+    break;
+
+  case 57: /* curl_line: CURL_COMMAND PARAM_VALUE curl_all_options  */
+#line 322 "proj.y"
+                                                                    {
+                                                                        char* result = malloc(512);
+                                                                        sprintf(result, "Invoke-WebRequest -Uri %s %s", (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                        (yyval.strval) = result;
+                                                                    }
+#line 1690 "y.tab.c"
+    break;
+
+  case 58: /* curl_all_options: PARAM_NAME PARAM_VALUE  */
+#line 329 "proj.y"
+                                                                    {
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName((yyvsp[-1].strval), intermediar);
+                                                                        char* result = malloc(256);
+                                                                        sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                        (yyval.strval) = result;
+                                                                    }
+#line 1702 "y.tab.c"
+    break;
+
+  case 59: /* curl_all_options: PARAM_NAME  */
+#line 336 "proj.y"
+                                                                    {
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName((yyvsp[0].strval), intermediar);
+                                                                        (yyval.strval) = strdup(intermediar);
+                                                                    }
+#line 1712 "y.tab.c"
+    break;
+
+  case 60: /* curl_all_options: PARAM_NAME PARAM_VALUE curl_all_options  */
+#line 341 "proj.y"
+                                                                    {
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName((yyvsp[-2].strval), intermediar);
+                                                                        char* result = malloc(256);
+                                                                        sprintf(result, "%s %s %s", intermediar, (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                        (yyval.strval) = result;
+                                                                    }
+#line 1724 "y.tab.c"
+    break;
+
+  case 61: /* curl_all_options: PARAM_NAME curl_all_options  */
+#line 348 "proj.y"
+                                                                    {
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName((yyvsp[-1].strval), intermediar);
+                                                                        char* result = malloc(256);
+                                                                        sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                        (yyval.strval) = result;
+                                                                    }
+#line 1736 "y.tab.c"
+    break;
+
+  case 62: /* mv_line: MV_COMMAND mv_all_options path_dst  */
+#line 358 "proj.y"
                                                                    {
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Move-Item %s %s", (yyvsp[0].strval), (yyvsp[-1].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1241 "y.tab.c"
+#line 1746 "y.tab.c"
     break;
 
-  case 14: /* mv_line: MV_COMMAND path_dst mv_all_options  */
-#line 81 "proj.y"
+  case 63: /* mv_line: MV_COMMAND path_dst mv_all_options  */
+#line 363 "proj.y"
                                                                    {
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Move-Item %s %s", (yyvsp[-1].strval), (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1251 "y.tab.c"
+#line 1756 "y.tab.c"
     break;
 
-  case 15: /* path_dst: PARAM_VALUE PARAM_VALUE  */
-#line 87 "proj.y"
+  case 64: /* path_dst: PARAM_VALUE PARAM_VALUE  */
+#line 369 "proj.y"
                                                                 {
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "-Path %s -Destination %s", (yyvsp[-1].strval), (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1261 "y.tab.c"
+#line 1766 "y.tab.c"
     break;
 
-  case 16: /* mv_all_options: PARAM_NAME PARAM_VALUE  */
-#line 94 "proj.y"
+  case 65: /* mv_all_options: PARAM_NAME PARAM_VALUE  */
+#line 376 "proj.y"
+                                                                   {
+                                                                    char intermediar[128] = "";
+                                                                    convertMVParamName((yyvsp[-1].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1781 "y.tab.c"
+    break;
+
+  case 66: /* mv_all_options: PARAM_NAME  */
+#line 386 "proj.y"
+                                                                {
+                                                                    char intermediar[128] = "";
+                                                                    convertMVParamName((yyvsp[0].strval), intermediar);
+                                                                    (yyval.strval) = strdup(intermediar);
+                                                                }
+#line 1791 "y.tab.c"
+    break;
+
+  case 67: /* mv_all_options: PARAM_NAME PARAM_VALUE mv_all_options  */
+#line 391 "proj.y"
+                                                                  {
+                                                                    char intermediar[128] = "";
+                                                                    convertMVParamName((yyvsp[-2].strval), intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s %s", intermediar, (yyvsp[-1].strval), (yyvsp[0].strval));
+                                                                    (yyval.strval) = result;
+                                                                }
+#line 1806 "y.tab.c"
+    break;
+
+  case 68: /* mv_all_options: PARAM_NAME mv_all_options  */
+#line 401 "proj.y"
                                                                    {
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName((yyvsp[-1].strval), intermediar);
@@ -1269,45 +1814,11 @@ yyreduce:
                                                                     sprintf(result, "%s %s", intermediar, (yyvsp[0].strval));
                                                                     (yyval.strval) = result;
                                                                 }
-#line 1273 "y.tab.c"
-    break;
-
-  case 17: /* mv_all_options: PARAM_NAME  */
-#line 101 "proj.y"
-                                                                {
-                                                                    char intermediar[128] = "";
-                                                                    convertMVParamName((yyvsp[0].strval), intermediar);
-                                                                    (yyval.strval) = strdup(intermediar);
-                                                                }
-#line 1283 "y.tab.c"
-    break;
-
-  case 18: /* mv_all_options: PARAM_NAME PARAM_VALUE mv_all_options  */
-#line 106 "proj.y"
-                                                                  {
-                                                                    char intermediar[128] = "";
-                                                                    convertMVParamName((yyvsp[-1].strval), intermediar);
-                                                                    char* result = malloc(256);
-                                                                    sprintf(result, "%s %s %s", (yyvsp[-2].strval), intermediar, (yyvsp[0].strval));
-                                                                    (yyval.strval) = result;
-                                                                }
-#line 1295 "y.tab.c"
-    break;
-
-  case 19: /* mv_all_options: PARAM_NAME mv_all_options  */
-#line 113 "proj.y"
-                                                                   {
-                                                                    char intermediar[128] = "";
-                                                                    convertMVParamName((yyvsp[0].strval), intermediar);
-                                                                    char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", (yyvsp[-1].strval), intermediar);
-                                                                    (yyval.strval) = result;
-                                                                }
-#line 1307 "y.tab.c"
+#line 1818 "y.tab.c"
     break;
 
 
-#line 1311 "y.tab.c"
+#line 1822 "y.tab.c"
 
       default: break;
     }
@@ -1500,7 +2011,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 121 "proj.y"
+#line 409 "proj.y"
 
 
 int main(void)
@@ -1534,6 +2045,69 @@ void convertLSParamName(char* pname, char* output) {
     }
 
     else if(strcmp(pname, "-s")==0 || strcmp(pname, "--size") == 0 || strcmp(pname, "-m") == 0 || strcmp(pname, "-N") == 0 || strcmp(pname, "--literal") == 0 || strcmp(pname, "-l") == 0 || strcmp(pname, "-a") == 0 || strcmp(pname, "--all") == 0){
+        strcpy(output, "");
+    }
+}
+void convertMKDIRParamName(char* pname, char* output) {
+    if(strcmp(pname, "-p") == 0 || strcmp(pname, "--parents") == 0 || strcmp(pname, "-v")==0 || strcmp(pname, "--verbose") == 0) {
+        strcpy(output, "");
+    }
+}
+void convertCPParamName(char* pname, char* output) {
+    if(strcmp(pname, "-f") == 0 || strcmp(pname, "--force")==0) {
+        strcpy(output, "-Force");
+    }
+    else if(strcmp(pname, "-r") == 0 || strcmp(pname, "-R") == 0 || strcmp(pname, "--recursive")) {
+        strcpy(output, "-Recurse");
+    }
+    else if(strcmp(pname, "-H") == 0 || strcmp(pname, "-l") == 0 || strcmp(pname, "--link") == 0 || strcmp(pname, "-L") == 0 || strcmp(pname, "--dereference") == 0 || strcmp(pname, "-s") == 0 || strcmp(pname, "--symbolic-link") == 0) {
+        strcpy(output, "");
+    }
+}
+void convertHeadParams(char* pname, int pvalue, char* output) {
+    if(strcmp(pname, "-n") == 0 || strcmp(pname, "--lines") == 0) {
+        if(pvalue < 0)
+            sprintf(output, "-Tail %d", -pvalue);
+        else
+            sprintf(output, "-TotalCount %d", pvalue);
+    }
+    else if(strcmp(pname, "-c") == 0 || strcmp(pname, "--bytes") == 0) {
+        if(pvalue < 0)
+            sprintf(output, "-Encoding Byte -Tail %d", -pvalue);
+        else
+            sprintf(output, "-Encoding Byte -TotalCount %d", pvalue);
+    }
+    else
+        strcpy(output, "");
+}
+void convertPKILLParamName(char* pname, char* output) {
+    if(strcmp(pname, "-9") == 0 || strcmp(pname, "-SIGKILL") == 0) {
+        strcpy(output, "-Force");
+    }
+    else if(strcmp(pname, "-P") == 0 || strcmp(pname, "--parent") == 0) {
+        strcpy(output, "-Id");
+    }
+    else if(strcmp(pname, "-f") == 0 || strcmp(pname, "--full")) {
+        strcpy(output, "-Name");
+    }
+    else {
+        strcpy(output, "");
+    }
+}
+void convertCURLParamName(char* pname, char* output) {
+    if(strcmp(pname, "-d") == 0 || strcmp(pname, "--data") == 0) {
+        strcpy(output, "-Body");
+    }
+    else if(strcmp(pname, "-o")==0 || strcmp(pname, "--output") == 0) {
+        strcpy(output, "-OutFile");
+    }
+    else if(strcmp(pname, "-T") == 0 || strcmp(pname, "--output-file") == 0) {
+        strcpy(output, "-InFile");
+    }
+    else if(strcmp(pname, "-A") == 0 || strcmp(pname, "--user-agent") == 0) {
+        strcpy(output, "-UserAgent");
+    }
+    else {
         strcpy(output, "");
     }
 }

@@ -1,1 +1,7 @@
 mv ./dummy /dummy2 -f dummyvalue | ls -R C:\Users
+mkdir .\luceafarul\catalina -v -p
+cp ./file1 ./destination/files -R -f -l
+head -c -10 ./file ./bruhhh
+pkill -9 minecraft
+ip -iec -j -p address
+curl youtube.com -T ./fileToTransfer -A doncorleone

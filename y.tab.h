@@ -56,9 +56,18 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     MV_COMMAND = 258,              /* MV_COMMAND  */
     LS_COMMAND = 259,              /* LS_COMMAND  */
-    PARAM_NAME = 260,              /* PARAM_NAME  */
-    PARAM_VALUE = 261,             /* PARAM_VALUE  */
-    CMD_SEPARATOR = 262            /* CMD_SEPARATOR  */
+    MKDIR_COMMAND = 260,           /* MKDIR_COMMAND  */
+    CP_COMMAND = 261,              /* CP_COMMAND  */
+    HEAD_COMMAND = 262,            /* HEAD_COMMAND  */
+    PKILL_COMMAND = 263,           /* PKILL_COMMAND  */
+    IP_COMMAND = 264,              /* IP_COMMAND  */
+    NETSTAT_COMMAND = 265,         /* NETSTAT_COMMAND  */
+    CURL_COMMAND = 266,            /* CURL_COMMAND  */
+    PARAM_NAME = 267,              /* PARAM_NAME  */
+    PARAM_VALUE = 268,             /* PARAM_VALUE  */
+    CMD_SEPARATOR = 269,           /* CMD_SEPARATOR  */
+    HEAD_PARAM = 270,              /* HEAD_PARAM  */
+    INT_VALUE = 271                /* INT_VALUE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -69,20 +78,29 @@ extern int yydebug;
 #define YYUNDEF 257
 #define MV_COMMAND 258
 #define LS_COMMAND 259
-#define PARAM_NAME 260
-#define PARAM_VALUE 261
-#define CMD_SEPARATOR 262
+#define MKDIR_COMMAND 260
+#define CP_COMMAND 261
+#define HEAD_COMMAND 262
+#define PKILL_COMMAND 263
+#define IP_COMMAND 264
+#define NETSTAT_COMMAND 265
+#define CURL_COMMAND 266
+#define PARAM_NAME 267
+#define PARAM_VALUE 268
+#define CMD_SEPARATOR 269
+#define HEAD_PARAM 270
+#define INT_VALUE 271
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 11 "proj.y"
+#line 16 "proj.y"
 
     int intval;
     char* strval;
 
-#line 86 "y.tab.h"
+#line 104 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
