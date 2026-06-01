@@ -1,10 +1,17 @@
-Get-Location
- New-Item -ItemType File -Path testfile.txt
- Remove-Item -Recurse -Force testfile.txt
- Select-String -Pattern pattern -Path testfile.txt 
- Get-Content -n testfile.txt
- Get-Process 
+Get-ChildItem -Recurse path
+ Get-Location
+ New-Item -ItemType Directory -Path path 
+ New-Item -ItemType File -Path file.txt
+ Copy-Item file1 -Destination file2 -Force
+ Move-Item -Path file1 -Destination file2
+ Remove-Item -Path file1
+ Get-Content -Path file.txt
+ Select-String -Pattern pattern -Path file.txt
+ Get-Content -TotalCount 5 -Path file.txt
+ Stop-Process -Force processName
+ Get-Process
+ Get-NetIpAddress
+ Get-NetTcpConnection
  Clear-Host
- Get-History -Count 10
- Move-Item -Path path1 -Destination path2 -Force dummyvalue -Force dummyvalue2
- Get-ChildItem -Recurse -FollowSymlink path
+ Get-History
+ Invoke-WebRequest -Uri http://example.com -OutFile out.html

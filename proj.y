@@ -83,30 +83,19 @@ ls_line:    LS_COMMAND ls_all_options                               {
                                                                 }
             ;
 
-ls_all_options:    PARAM_NAME PARAM_VALUE                          {
-                                                                    char intermediar[128] = "";
-                                                                    convertLSParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", intermediar, $2);
-                                                                    $$ = result;
-                                                                }
-                | PARAM_NAME                                    {
+ls_all_options: PARAM_NAME                                    {
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName($1, intermediar);
                                                                     $$ = strdup(intermediar);
                                                                 } 
-                | PARAM_NAME PARAM_VALUE ls_all_options           {
-                                                                    char intermediar[128] = "";
-                                                                    convertLSParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    sprintf(result, "%s %s %s", intermediar, $2, $3);
-                                                                    $$ = result;
-                                                                }
                 | PARAM_NAME ls_all_options                        {
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName($1, intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", intermediar, $2);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", $2);
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, $2);
                                                                     $$ = result;
                                                                 }
                 ;
@@ -122,38 +111,31 @@ mkdir_line: MKDIR_COMMAND mkdir_all_options PARAM_VALUE               {
                                                                     sprintf(result, "New-Item -Path %s -ItemType Directory %s", $2, $3);
                                                                     $$ = result;
                                                                 }
-            ;
-
-mkdir_all_options:    PARAM_NAME PARAM_VALUE                          {
-                                                                    char intermediar[128] = "";
-                                                                    convertMKDIRParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    if(strcmp(intermediar, "") == 0)
-                                                                        strcpy(result, "");
-                                                                    else
-                                                                        sprintf(result, "%s %s", intermediar, $2);
+            | MKDIR_COMMAND mkdir_all_options                         {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "New-Item -ItemType Directory %s", $2);
                                                                     $$ = result;
                                                                 }
-                | PARAM_NAME                                    {
+            | MKDIR_COMMAND PARAM_VALUE                               {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "New-Item -ItemType Directory -Path %s", $2);
+                                                                    $$ = result;
+                                                                }
+            ;
+
+mkdir_all_options: PARAM_NAME                                    {
                                                                     char intermediar[128] = "";
                                                                     convertMKDIRParamName($1, intermediar);
                                                                     $$ = strdup(intermediar);
                                                                 } 
-                | PARAM_NAME PARAM_VALUE mkdir_all_options           {
-                                                                    char intermediar[128] = "";
-                                                                    convertMKDIRParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    if(strcmp(intermediar, "") == 0)
-                                                                        sprintf(result, "%s", $3);
-                                                                    else
-                                                                        sprintf(result, "%s %s %s", intermediar, $2, $3);
-                                                                    $$ = result;
-                                                                }
                 | PARAM_NAME mkdir_all_options                        {
                                                                     char intermediar[128] = "";
                                                                     convertMKDIRParamName($1, intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", intermediar, $2);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", $2);
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, $2);
                                                                     $$ = result;
                                                                 }
                 ;
@@ -169,6 +151,11 @@ cp_line:    CP_COMMAND cp_all_options cp_file_dest              {
                                                                     sprintf(result, "Copy-Item %s %s", $2, $3);
                                                                     $$ = result;
                                                                 }
+            | CP_COMMAND cp_file_dest                           {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Copy-Item %s", $2);
+                                                                    $$ = result;
+                                                                }
             ;
 
 cp_file_dest: PARAM_VALUE PARAM_VALUE                           {
@@ -178,36 +165,19 @@ cp_file_dest: PARAM_VALUE PARAM_VALUE                           {
                                                                 }
               ;
 
-cp_all_options:    PARAM_NAME PARAM_VALUE                          {
-                                                                    char intermediar[128] = "";
-                                                                    convertCPParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    if(strcmp(intermediar, "") == 0)
-                                                                        strcpy(result, "");
-                                                                    else
-                                                                        sprintf(result, "%s %s", intermediar, $2);
-                                                                    $$ = result;
-                                                                }
-                | PARAM_NAME                                    {
+cp_all_options: PARAM_NAME                                    {
                                                                     char intermediar[128] = "";
                                                                     convertCPParamName($1, intermediar);
                                                                     $$ = strdup(intermediar);
                                                                 } 
-                | PARAM_NAME PARAM_VALUE cp_all_options           {
-                                                                    char intermediar[128] = "";
-                                                                    convertCPParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    if(strcmp(intermediar, "") == 0)
-                                                                        sprintf(result, "%s", $3);
-                                                                    else
-                                                                        sprintf(result, "%s %s %s", intermediar, $2, $3);
-                                                                    $$ = result;
-                                                                }
                 | PARAM_NAME cp_all_options                        {
                                                                     char intermediar[128] = "";
                                                                     convertCPParamName($1, intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", intermediar, $2);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", $2);
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, $2);
                                                                     $$ = result;
                                                                 }
                 ;
@@ -386,6 +356,11 @@ mv_line:    MV_COMMAND mv_all_options path_dst                     {
                                                                     sprintf(result, "Move-Item %s %s", $2, $3);
                                                                     $$ = result;
                                                                 }
+            | MV_COMMAND path_dst                                  {
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Move-Item %s", $2);
+                                                                    $$ = result;
+                                                                }
             ;
 path_dst: PARAM_VALUE PARAM_VALUE                               {
                                                                     char* result = malloc(512);
@@ -394,36 +369,19 @@ path_dst: PARAM_VALUE PARAM_VALUE                               {
                                                                 }
             ;
 
-mv_all_options:    PARAM_NAME PARAM_VALUE                          {
-                                                                    char intermediar[128] = "";
-                                                                    convertMVParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    if(strcmp(intermediar, "") == 0)
-                                                                        strcpy(result, "");
-                                                                    else
-                                                                        sprintf(result, "%s %s", intermediar, $2);
-                                                                    $$ = result;
-                                                                }
-                | PARAM_NAME                                    {
+mv_all_options: PARAM_NAME                                    {
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName($1, intermediar);
                                                                     $$ = strdup(intermediar);
                                                                 } 
-                | PARAM_NAME PARAM_VALUE mv_all_options           {
-                                                                    char intermediar[128] = "";
-                                                                    convertMVParamName($1, intermediar);
-                                                                    char* result = malloc(256);
-                                                                    if(strcmp(intermediar, "") == 0)
-                                                                        sprintf(result, "%s", $3);
-                                                                    else
-                                                                        sprintf(result, "%s %s %s", intermediar, $2, $3);
-                                                                    $$ = result;
-                                                                }
                 | PARAM_NAME mv_all_options                        {
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName($1, intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", intermediar, $2);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", $2);
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, $2);
                                                                     $$ = result;
                                                                 }
                 ;
