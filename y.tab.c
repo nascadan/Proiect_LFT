@@ -34,19 +34,24 @@ void convertRMParamName(char*, char*);
 void convertGrepParamName(char*, char*);
 void convertCatParamName(char*, char*);
 void convertPSParamName(char*, char*);
+void convertMKDIRParamName(char*, char*);
+void convertCPParamName(char*, char*);
+void convertHeadParams(char*, int, char*);
+void convertPKILLParamName(char*, char*);
+void convertCURLParamName(char*, char*);
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
 #endif
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
-#line 17 "proj.y"
+#line 22 "proj.y"
 typedef union YYSTYPE {
     int intval;
     char* strval;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
-#line 50 "y.tab.c"
+#line 55 "y.tab.c"
 
 /* compatibility with bison */
 #ifdef YYPARSE_PARAM
@@ -93,81 +98,129 @@ extern int YYPARSE_DECL();
 #define PS_COMMAND 264
 #define CLEAR_COMMAND 265
 #define HISTORY_COMMAND 266
-#define PARAM_NAME 267
-#define PARAM_VALUE 268
-#define CMD_SEPARATOR 269
+#define MKDIR_COMMAND 267
+#define CP_COMMAND 268
+#define HEAD_COMMAND 269
+#define PKILL_COMMAND 270
+#define IP_COMMAND 271
+#define NETSTAT_COMMAND 272
+#define CURL_COMMAND 273
+#define PARAM_NAME 274
+#define PARAM_VALUE 275
+#define CMD_SEPARATOR 276
+#define HEAD_PARAM 277
+#define INT_VALUE 278
 #define YYERRCODE 256
 typedef int YYINT;
 static const YYINT yylhs[] = {                           -1,
     0,    0,    0,    2,    2,    2,    2,    2,    2,    2,
-    2,    2,    2,    5,    5,    5,    5,    5,    6,    6,
-    6,    6,    4,    4,    3,    1,    1,    1,    1,    7,
-    7,    8,    8,    8,    8,    9,    9,    9,    9,   10,
-   10,   10,   10,   11,   11,   11,   11,   12,   12,   12,
-   12,   13,   13,   13,   13,   15,   15,   14,   14,   16,
-   16,   16,   16,   16,   17,   17,   17,   17,   18,   18,
-   18,   19,   19,   19,   19,   20,   21,   21,
+    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+    5,    5,    5,    5,    5,    6,    6,    6,    6,   22,
+   22,   23,   23,   23,   23,   24,   24,   26,   25,   25,
+   25,   25,   27,   29,   29,   28,   28,   28,   30,   30,
+   31,   31,   31,   31,   32,   32,   33,   33,   34,   34,
+   35,   39,   39,   38,   38,   36,   36,   37,   37,   37,
+   37,    4,    4,    3,    1,    1,    1,    1,    7,    7,
+    8,    8,    8,    8,    9,    9,    9,    9,   10,   10,
+   10,   10,   11,   11,   11,   11,   12,   12,   12,   12,
+   13,   13,   13,   13,   15,   15,   14,   14,   16,   16,
+   16,   16,   16,   17,   17,   17,   17,   18,   18,   18,
+   19,   19,   19,   19,   20,   21,   21,
 };
 static const YYINT yylen[] = {                            2,
     1,    3,    2,    1,    1,    1,    1,    1,    1,    1,
-    1,    1,    1,    2,    3,    3,    1,    2,    2,    1,
-    3,    2,    3,    3,    2,    2,    1,    3,    2,    1,
-    2,    2,    1,    3,    2,    2,    3,    3,    2,    2,
-    1,    3,    2,    2,    3,    3,    2,    2,    1,    3,
-    2,    2,    3,    3,    2,    2,    1,    1,    2,    1,
+    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+    2,    3,    3,    1,    2,    2,    1,    3,    2,    3,
+    3,    2,    1,    3,    2,    3,    3,    2,    2,    1,
+    3,    2,    3,    1,    2,    2,    3,    2,    2,    2,
+    2,    1,    3,    2,    1,    1,    2,    3,    1,    2,
+    3,    1,    0,    1,    2,    3,    3,    2,    1,    3,
     2,    3,    3,    2,    2,    1,    3,    2,    1,    2,
-    2,    2,    1,    3,    2,    1,    1,    2,
+    2,    1,    3,    2,    2,    3,    3,    2,    2,    1,
+    3,    2,    2,    3,    3,    2,    2,    1,    3,    2,
+    2,    3,    3,    2,    2,    1,    1,    2,    1,    2,
+    3,    3,    2,    2,    1,    3,    2,    1,    2,    2,
+    2,    1,    3,    2,    1,    1,    2,
 };
 static const YYINT yydefred[] = {                         0,
-    0,    0,    0,    0,    0,    0,    0,    0,   76,    0,
-    0,    1,    4,    5,    6,    7,    8,    9,   10,   11,
-   12,   13,    0,    0,    0,    0,    0,    0,    0,    0,
-   31,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   71,   70,   78,    0,    0,
-   29,   25,   23,   24,    0,   22,   16,   15,    0,   35,
-    0,   43,   38,   37,    0,   51,   46,   45,   59,   56,
-   53,   54,    0,   68,   63,   62,    0,   75,    2,   28,
-   21,   34,   42,   50,   67,   74,
+    0,    0,    0,    0,    0,    0,    0,    0,  125,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    1,    4,
+    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+   15,   16,   17,   18,   19,   20,    0,    0,    0,    0,
+    0,    0,    0,    0,   80,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,  120,
+  119,  127,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,   55,   49,   56,   50,    0,    0,   57,    0,
+    0,    0,    0,    0,    0,    0,    0,   78,   74,   72,
+   73,    0,   29,   23,   22,    0,   84,    0,   92,   87,
+   86,    0,  100,   95,   94,  108,  105,  102,  103,    0,
+  117,  112,  111,    0,  124,    0,   35,   31,   30,    0,
+   42,   38,   36,   37,   48,    0,    0,   43,    0,   54,
+   60,   58,   65,   62,   61,    0,   71,   67,   66,    2,
+   77,   28,   83,   91,   99,  116,  123,   34,   41,   47,
+   45,   53,   70,
 };
 #if defined(YYDESTRUCT_CALL) || defined(YYSTYPE_TOSTRING)
 static const YYINT yystos[] = {                           0,
   257,  258,  259,  260,  261,  262,  263,  264,  265,  266,
-  271,  273,  275,  276,  278,  280,  282,  284,  287,  289,
-  291,  292,  267,  268,  272,  274,  267,  268,  277,  267,
-  279,  267,  268,  281,  267,  268,  283,  267,  268,  285,
-  286,  267,  268,  288,  267,  268,  290,  268,  269,  268,
-  272,  268,  274,  272,  268,  277,  277,  268,  268,  279,
-  268,  281,  281,  268,  268,  283,  283,  268,  285,  268,
-  286,  285,  268,  288,  288,  268,  268,  290,  273,  272,
-  277,  279,  281,  283,  288,  290,
+  267,  268,  269,  270,  271,  272,  273,  280,  282,  284,
+  285,  287,  289,  291,  293,  296,  298,  300,  301,  302,
+  304,  307,  310,  313,  315,  316,  274,  275,  281,  283,
+  274,  275,  286,  274,  288,  274,  275,  290,  274,  275,
+  292,  274,  275,  294,  295,  274,  275,  297,  274,  275,
+  299,  275,  274,  275,  303,  274,  275,  305,  306,  274,
+  277,  308,  274,  275,  278,  311,  312,  274,  275,  314,
+  274,  318,  274,  275,  317,  276,  275,  281,  275,  283,
+  281,  275,  286,  286,  275,  275,  288,  275,  290,  290,
+  275,  275,  292,  292,  275,  294,  275,  295,  294,  275,
+  297,  297,  275,  275,  299,  275,  303,  303,  275,  275,
+  305,  275,  306,  305,  308,  278,  275,  309,  275,  311,
+  314,  275,  318,  275,  319,  275,  317,  317,  275,  282,
+  281,  286,  288,  290,  292,  297,  299,  303,  305,  308,
+  309,  311,  317,
 };
 #endif /* YYDESTRUCT_CALL || YYSTYPE_TOSTRING */
-static const YYINT yydgoto[] = {                         11,
-   25,   12,   26,   13,   14,   29,   15,   31,   16,   34,
-   17,   37,   18,   40,   41,   19,   44,   20,   47,   21,
-   22,
+static const YYINT yydgoto[] = {                         18,
+   39,   19,   40,   20,   21,   43,   22,   45,   23,   48,
+   24,   51,   25,   54,   55,   26,   58,   27,   61,   28,
+   29,   30,   65,   31,   68,   69,   32,   72,  128,   33,
+   76,   77,   34,   80,   35,   36,   85,   82,  135,
 };
-static const YYINT yysindex[] = {                      -210,
- -209, -207, -267, -205, -203, -192, -190, -188,    0, -259,
- -258,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0, -186, -255, -224, -201, -184, -171, -211, -182,
-    0, -180, -168, -167, -178, -165, -164, -162, -161, -160,
- -162, -176, -158, -157, -174,    0,    0,    0, -210, -201,
-    0,    0,    0,    0, -171,    0,    0,    0, -267,    0,
- -168,    0,    0,    0, -165,    0,    0,    0,    0,    0,
-    0,    0, -158,    0,    0,    0, -155,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,
+static const YYINT yysindex[] = {                      -187,
+ -171, -169, -263, -165, -158, -153, -151, -149,    0, -262,
+ -147, -145, -175, -186, -143, -259, -141, -257,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0, -139, -254, -215, -210,
+ -137, -181, -188, -135,    0, -133, -167, -162, -131, -155,
+ -129, -115, -114, -113, -115, -126, -111, -110, -124,    0,
+    0,    0, -121, -108, -107, -119, -106, -105, -103, -175,
+ -118, -102,    0,    0,    0,    0, -184, -100,    0,  -99,
+ -259,  -98, -117,  -96,  -95, -187, -210,    0,    0,    0,
+    0, -181,    0,    0,    0, -263,    0, -167,    0,    0,
+    0, -155,    0,    0,    0,    0,    0,    0,    0, -111,
+    0,    0,    0,  -93,    0, -108,    0,    0,    0, -103,
+    0,    0,    0,    0,    0, -175, -102,    0, -269,    0,
+    0,    0,    0,    0,    0,  -96,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
-    0,    3,   15,    0,    0,    0,   16,   17,    0,   18,
+    0,    3,   23,    0,    0,    0,   24,   25,    0,   26,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,   19,    0,    0,    0,   20,   21,   22,   23,
-    0,   24,   25,   26,   27,   28,   29,    1,    4,   30,
-   31,   32,   33,   34,   35,    0,    0,    0,   36,    6,
-    0,    0,    0,    0,    8,    0,    0,    0,   37,    0,
-   10,    0,    0,    0,   12,    0,    0,    0,    0,    0,
-    0,    0,   14,    0,    0,    0,   38,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   27,    0,    0,    0,
+   28,   29,   30,   31,    0,   32,   33,   34,   35,   36,
+   37,    1,    4,   38,   39,   40,   41,   42,   43,    0,
+    0,    0,   44,    0,    0,   45,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   46,  -92,    0,    0,
+    6,   47,   48,    0,    0,   49,    8,    0,    0,    0,
+    0,   10,    0,    0,    0,   50,    0,   12,    0,    0,
+    0,   14,    0,    0,    0,    0,    0,    0,    0,   16,
+    0,    0,    0,   51,    0,   18,    0,    0,    0,   20,
+    0,    0,    0,    0,    0,  -91,   52,    0,   53,    0,
+    0,    0,    0,    0,    0,   22,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,
 };
 #if YYBTYACC
 static const YYINT yycindex[] = {                         0,
@@ -179,28 +232,43 @@ static const YYINT yycindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,
 };
 #endif
 static const YYINT yygindex[] = {                         0,
-   47,   51,   78,    0,    0,   40,    0,   39,    0,   13,
-    0,    7,    0,  -36,   66,    0,   -2,    0,  -38,    0,
-    0,
+   58,   78,  128,    0,    0,   55,    0,  -37,    0,   54,
+    0,   13,    0,   59,  118,    0,   -2,    0,  -57,    0,
+    0,    0,    2,    0,   -8,  107,    0,  -70,   60,    0,
+  -60,    0,    0,  101,    0,    0,  -16,  104,    0,
 };
-#define YYTABLESIZE 307
-static const YYINT yytable[] = {                         30,
-   58,   69,   17,   57,   72,   26,   78,   19,   48,   40,
-   49,   48,   52,   65,   30,   60,   69,   77,   27,   20,
-   18,   14,   33,   41,   36,   39,   49,   44,   47,   55,
-   52,   66,   61,   64,   73,    3,   32,   72,   86,   74,
-   75,   66,   67,   24,   62,   63,    1,    2,    3,    4,
-    5,    6,    7,    8,    9,   10,   58,   23,   24,   27,
-   28,   32,   33,   35,   36,   23,   56,   57,   60,   51,
-   85,   84,   54,   83,   38,   39,   42,   43,   45,   46,
-   23,   50,   27,   55,   30,   59,   32,   61,   35,   65,
-   42,   73,   45,   77,   81,   27,   80,   82,   32,   79,
-   64,   35,   53,   68,   38,   71,   70,   39,   42,    0,
-   76,   45,    0,    0,    0,    0,    0,    0,    0,    0,
+#define YYTABLESIZE 329
+static const YYINT yytable[] = {                        125,
+  107,  115,   24,  106,   73,   64,   97,   75,   75,   26,
+   44,   89,   62,   97,   81,  114,  130,   32,   86,   39,
+   89,   68,   79,  109,  118,  126,   76,   27,   25,   21,
+   82,   90,   85,   88,   98,   93,   96,  104,  101,  115,
+  110,  113,  122,   33,   40,   52,   63,   69,    3,   81,
+  121,   44,   51,  111,  112,  150,  147,  121,  143,   38,
+  124,  103,  104,   37,  117,  118,  137,  138,  152,    1,
+    2,    3,    4,    5,    6,    7,    8,    9,   10,   11,
+   12,   13,   14,   15,   16,   17,   95,   73,   74,   73,
+  129,   75,   41,   75,   88,   93,   94,   91,   70,   99,
+  100,   71,   37,   38,   41,   42,   46,  146,   46,   47,
+  106,  149,  101,  109,  145,   49,   50,  148,   49,  153,
+   52,   53,   56,   57,   59,   60,   63,   64,   66,   67,
+   78,   79,   83,   84,   37,   87,   41,   92,   44,   96,
+   46,   98,   49,  102,  141,  105,  142,   56,  110,   59,
+  114,  144,   63,  116,   66,  120,   83,  136,   52,  126,
+  107,   53,   56,  140,  113,   63,   90,  119,  122,   67,
+   66,  108,  127,   78,  123,  132,  134,   83,  131,  139,
+   59,    0,   59,   46,  133,    0,  151,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -209,31 +277,33 @@ static const YYINT yytable[] = {                         30,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,   58,   58,
-   57,   17,   57,   26,   26,   19,   19,   40,   40,   48,
-   48,   65,   65,   30,   60,   69,   77,   27,   20,   18,
-   14,   33,   41,   36,   39,   49,   44,   47,   55,   52,
-   66,   61,   64,   73,    3,   32,   72,
+    0,    0,    0,    0,    0,  107,  107,  106,   24,  106,
+   64,   64,   75,   75,   26,   26,   89,   89,   97,   97,
+  114,  114,   32,   32,   39,   39,   68,   68,   79,  109,
+  118,  126,   76,   27,   25,   21,   82,   90,   85,   88,
+   98,   93,   96,  104,  101,  115,  110,  113,  122,   33,
+   40,   52,   63,   69,    3,   81,  121,   44,   51,
 };
-static const YYINT yycheck[] = {                        267,
-    0,   38,    0,    0,   41,    0,   45,    0,  268,    0,
-  269,    0,  268,    0,    0,    0,    0,    0,    0,    0,
+static const YYINT yycheck[] = {                         70,
+    0,   59,    0,    0,  274,    0,   44,    0,  278,    0,
+  274,    0,  275,    0,  274,    0,   77,    0,  276,    0,
+  275,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,   77,   42,
-   43,   35,   36,  268,   32,   33,  257,  258,  259,  260,
-  261,  262,  263,  264,  265,  266,  268,  267,  268,  267,
-  268,  267,  268,  267,  268,  267,   27,   28,   30,   23,
-   73,   65,   26,   61,  267,  268,  267,  268,  267,  268,
-  267,  268,  267,  268,  267,  268,  267,  268,  267,  268,
-  267,  268,  267,  268,   55,  267,   50,   59,  267,   49,
-  268,  267,   25,  268,  267,   40,  268,  268,  267,   -1,
-  268,  267,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,   56,   57,  126,  114,   66,   96,  275,
+   69,   49,   50,  274,   63,   64,   83,   84,  129,  257,
+  258,  259,  260,  261,  262,  263,  264,  265,  266,  267,
+  268,  269,  270,  271,  272,  273,  275,  274,  275,  274,
+  275,  278,  274,  278,   37,   41,   42,   40,  274,   46,
+   47,  277,  274,  275,  274,  275,  274,  110,  274,  275,
+   52,  120,  275,   55,  102,  274,  275,  116,  274,  136,
+  274,  275,  274,  275,  274,  275,  274,  275,  274,  275,
+  274,  275,  274,  275,  274,  275,  274,  275,  274,  275,
+  274,  275,  274,  275,   87,  275,   92,  274,  275,  274,
+  275,   98,  274,  275,  274,  275,  274,  275,  274,  278,
+  275,  275,  274,   86,  275,  274,   39,  275,  275,  275,
+  274,   54,  275,  274,   68,  275,  275,  274,   78,  275,
+  274,   -1,  275,  275,   81,   -1,  127,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -242,17 +312,12 @@ static const YYINT yycheck[] = {                        267,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  268,  269,
-  267,  269,  269,  268,  269,  268,  269,  268,  269,  268,
-  269,  268,  269,  269,  269,  269,  269,  269,  269,  269,
-  269,  269,  269,  269,  269,  269,  269,  269,  269,  269,
-  269,  269,  269,  269,  269,  269,  269,
+   -1,   -1,   -1,   -1,   -1,  275,  276,  274,  276,  276,
+  275,  276,  275,  276,  275,  276,  275,  276,  275,  276,
+  275,  276,  275,  276,  275,  276,  275,  276,  276,  276,
+  276,  276,  276,  276,  276,  276,  276,  276,  276,  276,
+  276,  276,  276,  276,  276,  276,  276,  276,  276,  276,
+  276,  276,  276,  276,  276,  276,  276,  276,  276,
 };
 #if YYBTYACC
 static const YYINT yyctable[] = {                        -1,
@@ -286,15 +351,17 @@ static const YYINT yyctable[] = {                        -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 };
 #endif
-#define YYFINAL 11
+#define YYFINAL 18
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 269
-#define YYUNDFTOKEN 293
+#define YYMAXTOKEN 278
+#define YYUNDFTOKEN 320
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 #ifndef NULL
@@ -320,12 +387,17 @@ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 NULL,"error","MV_COMMAND","LS_COMMAND","PWD_COMMAND","TOUCH_COMMAND",
 "RM_COMMAND","GREP_COMMAND","CAT_COMMAND","PS_COMMAND","CLEAR_COMMAND",
-"HISTORY_COMMAND","PARAM_NAME","PARAM_VALUE","CMD_SEPARATOR","$accept","total",
-"mv_all_options","line","path_dst","mv_line","ls_line","ls_all_options",
-"pwd_line","pwd_all_options","touch_line","touch_all_options","rm_line",
-"rm_all_options","grep_line","grep_all_options","grep_args","cat_line",
-"cat_all_options","ps_line","ps_all_options","clear_line","history_line",
-"illegal-symbol",
+"HISTORY_COMMAND","MKDIR_COMMAND","CP_COMMAND","HEAD_COMMAND","PKILL_COMMAND",
+"IP_COMMAND","NETSTAT_COMMAND","CURL_COMMAND","PARAM_NAME","PARAM_VALUE",
+"CMD_SEPARATOR","HEAD_PARAM","INT_VALUE","$accept","total","mv_all_options",
+"line","path_dst","mv_line","ls_line","ls_all_options","pwd_line",
+"pwd_all_options","touch_line","touch_all_options","rm_line","rm_all_options",
+"grep_line","grep_all_options","grep_args","cat_line","cat_all_options",
+"ps_line","ps_all_options","clear_line","history_line","mkdir_line",
+"mkdir_all_options","cp_line","cp_all_options","cp_file_dest","head_line",
+"head_all_options","head_all_paths","pkill_line","pkill_all_options",
+"pkill_param","ip_line","ip_all_options","netstat_line","curl_line",
+"curl_all_options","netstat_all_options","netstat_arg","illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : total",
@@ -342,6 +414,13 @@ static const char *const yyrule[] = {
 "line : ps_line",
 "line : clear_line",
 "line : history_line",
+"line : mkdir_line",
+"line : cp_line",
+"line : head_line",
+"line : pkill_line",
+"line : ip_line",
+"line : netstat_line",
+"line : curl_line",
 "ls_line : LS_COMMAND ls_all_options",
 "ls_line : LS_COMMAND ls_all_options PARAM_VALUE",
 "ls_line : LS_COMMAND PARAM_VALUE ls_all_options",
@@ -351,6 +430,48 @@ static const char *const yyrule[] = {
 "ls_all_options : PARAM_NAME",
 "ls_all_options : PARAM_NAME PARAM_VALUE ls_all_options",
 "ls_all_options : PARAM_NAME ls_all_options",
+"mkdir_line : MKDIR_COMMAND mkdir_all_options PARAM_VALUE",
+"mkdir_line : MKDIR_COMMAND PARAM_VALUE mkdir_all_options",
+"mkdir_all_options : PARAM_NAME PARAM_VALUE",
+"mkdir_all_options : PARAM_NAME",
+"mkdir_all_options : PARAM_NAME PARAM_VALUE mkdir_all_options",
+"mkdir_all_options : PARAM_NAME mkdir_all_options",
+"cp_line : CP_COMMAND cp_all_options cp_file_dest",
+"cp_line : CP_COMMAND cp_file_dest cp_all_options",
+"cp_file_dest : PARAM_VALUE PARAM_VALUE",
+"cp_all_options : PARAM_NAME PARAM_VALUE",
+"cp_all_options : PARAM_NAME",
+"cp_all_options : PARAM_NAME PARAM_VALUE cp_all_options",
+"cp_all_options : PARAM_NAME cp_all_options",
+"head_line : HEAD_COMMAND head_all_options head_all_paths",
+"head_all_paths : PARAM_VALUE",
+"head_all_paths : PARAM_VALUE head_all_paths",
+"head_all_options : HEAD_PARAM INT_VALUE",
+"head_all_options : HEAD_PARAM INT_VALUE head_all_options",
+"head_all_options : PARAM_NAME head_all_options",
+"pkill_line : PKILL_COMMAND PARAM_VALUE",
+"pkill_line : PKILL_COMMAND pkill_all_options",
+"pkill_all_options : pkill_param PARAM_VALUE",
+"pkill_all_options : pkill_param",
+"pkill_all_options : pkill_param PARAM_VALUE pkill_all_options",
+"pkill_all_options : pkill_param pkill_all_options",
+"pkill_param : PARAM_NAME",
+"pkill_param : INT_VALUE",
+"ip_line : IP_COMMAND PARAM_VALUE",
+"ip_line : IP_COMMAND ip_all_options PARAM_VALUE",
+"ip_all_options : PARAM_NAME",
+"ip_all_options : PARAM_NAME ip_all_options",
+"netstat_line : NETSTAT_COMMAND netstat_all_options netstat_arg",
+"netstat_arg : PARAM_VALUE",
+"netstat_arg :",
+"netstat_all_options : PARAM_NAME",
+"netstat_all_options : PARAM_NAME netstat_all_options",
+"curl_line : CURL_COMMAND curl_all_options PARAM_VALUE",
+"curl_line : CURL_COMMAND PARAM_VALUE curl_all_options",
+"curl_all_options : PARAM_NAME PARAM_VALUE",
+"curl_all_options : PARAM_NAME",
+"curl_all_options : PARAM_NAME PARAM_VALUE curl_all_options",
+"curl_all_options : PARAM_NAME curl_all_options",
 "mv_line : MV_COMMAND mv_all_options path_dst",
 "mv_line : MV_COMMAND path_dst mv_all_options",
 "path_dst : PARAM_VALUE PARAM_VALUE",
@@ -538,9 +659,9 @@ static YYINT  *yylexp = NULL;
 
 static YYINT  *yylexemes = NULL;
 #endif /* YYBTYACC */
-#line 443 "proj.y"
+#line 736 "proj.y"
 
-int main(void)
+int main()
 {
     return yyparse();
 }
@@ -569,7 +690,6 @@ void convertLSParamName(char* pname, char* output) {
     }else if(strcmp(pname, "-d")==0 || strcmp(pname, "--directory") == 0){
         strcpy(output, "-Directory");
     }
-
     else if(strcmp(pname, "-s")==0 || strcmp(pname, "--size") == 0 || strcmp(pname, "-m") == 0 || strcmp(pname, "-N") == 0 || strcmp(pname, "--literal") == 0 || strcmp(pname, "-l") == 0 || strcmp(pname, "-a") == 0 || strcmp(pname, "--all") == 0){
         strcpy(output, "");
     }
@@ -612,7 +732,75 @@ void convertCatParamName(char* pname, char* output) {
 void convertPSParamName(char* pname, char* output) {
     strcpy(output, "");
 }
-#line 616 "y.tab.c"
+
+void convertMKDIRParamName(char* pname, char* output) {
+    if(strcmp(pname, "-p") == 0 || strcmp(pname, "--parents") == 0 || strcmp(pname, "-v")==0 || strcmp(pname, "--verbose") == 0) {
+        strcpy(output, "");
+    }
+}
+
+void convertCPParamName(char* pname, char* output) {
+    if(strcmp(pname, "-f") == 0 || strcmp(pname, "--force")==0) {
+        strcpy(output, "-Force");
+    }
+    else if(strcmp(pname, "-r") == 0 || strcmp(pname, "-R") == 0 || strcmp(pname, "--recursive") == 0) {
+        strcpy(output, "-Recurse");
+    }
+    else if(strcmp(pname, "-H") == 0 || strcmp(pname, "-l") == 0 || strcmp(pname, "--link") == 0 || strcmp(pname, "-L") == 0 || strcmp(pname, "--dereference") == 0 || strcmp(pname, "-s") == 0 || strcmp(pname, "--symbolic-link") == 0) {
+        strcpy(output, "");
+    }
+}
+
+void convertHeadParams(char* pname, int pvalue, char* output) {
+    if(strcmp(pname, "-n") == 0 || strcmp(pname, "--lines") == 0) {
+        if(pvalue < 0)
+            sprintf(output, "-Tail %d", -pvalue);
+        else
+            sprintf(output, "-TotalCount %d", pvalue);
+    }
+    else if(strcmp(pname, "-c") == 0 || strcmp(pname, "--bytes") == 0) {
+        if(pvalue < 0)
+            sprintf(output, "-Encoding Byte -Tail %d", -pvalue);
+        else
+            sprintf(output, "-Encoding Byte -TotalCount %d", pvalue);
+    }
+    else
+        strcpy(output, "");
+}
+
+void convertPKILLParamName(char* pname, char* output) {
+    if(strcmp(pname, "-9") == 0 || strcmp(pname, "-SIGKILL") == 0) {
+        strcpy(output, "-Force");
+    }
+    else if(strcmp(pname, "-P") == 0 || strcmp(pname, "--parent") == 0) {
+        strcpy(output, "-Id");
+    }
+    else if(strcmp(pname, "-f") == 0 || strcmp(pname, "--full") == 0) {
+        strcpy(output, "-Name");
+    }
+    else {
+        strcpy(output, "");
+    }
+}
+
+void convertCURLParamName(char* pname, char* output) {
+    if(strcmp(pname, "-d") == 0 || strcmp(pname, "--data") == 0) {
+        strcpy(output, "-Body");
+    }
+    else if(strcmp(pname, "-o")==0 || strcmp(pname, "--output") == 0) {
+        strcpy(output, "-OutFile");
+    }
+    else if(strcmp(pname, "-T") == 0 || strcmp(pname, "--output-file") == 0) {
+        strcpy(output, "-InFile");
+    }
+    else if(strcmp(pname, "-A") == 0 || strcmp(pname, "--user-agent") == 0) {
+        strcpy(output, "-UserAgent");
+    }
+    else {
+        strcpy(output, "");
+    }
+}
+#line 804 "y.tab.c"
 
 /* For use in generated program */
 #define yydepth (int)(yystack.s_mark - yystack.s_base)
@@ -1283,65 +1471,65 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 29 "proj.y"
+#line 36 "proj.y"
 	{ printf("%s", yystack.l_mark[0].strval); free(yystack.l_mark[0].strval); }
-#line 1289 "y.tab.c"
+#line 1477 "y.tab.c"
 break;
 case 2:
-#line 30 "proj.y"
+#line 37 "proj.y"
 	{ printf("%s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval); free(yystack.l_mark[0].strval); free(yystack.l_mark[-1].strval); }
-#line 1294 "y.tab.c"
+#line 1482 "y.tab.c"
 break;
 case 3:
-#line 31 "proj.y"
+#line 38 "proj.y"
 	{ printf("%s", yystack.l_mark[0].strval); free(yystack.l_mark[0].strval); }
-#line 1299 "y.tab.c"
+#line 1487 "y.tab.c"
 break;
-case 14:
-#line 46 "proj.y"
+case 21:
+#line 61 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-ChildItem %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1308 "y.tab.c"
+#line 1496 "y.tab.c"
 break;
-case 15:
-#line 52 "proj.y"
+case 22:
+#line 66 "proj.y"
 	{
                                                                     char* result = malloc(512);
-                                                                    sprintf(result, "Get-ChildItem -Path %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
+                                                                    sprintf(result, "Get-ChildItem %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1317 "y.tab.c"
+#line 1505 "y.tab.c"
 break;
-case 16:
-#line 57 "proj.y"
+case 23:
+#line 71 "proj.y"
 	{
                                                                     char* result = malloc(512);
-                                                                    sprintf(result, "Get-ChildItem -Path %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    sprintf(result, "Get-ChildItem %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1326 "y.tab.c"
+#line 1514 "y.tab.c"
 break;
-case 17:
-#line 62 "proj.y"
+case 24:
+#line 76 "proj.y"
 	{
                                                                     yyval.strval = strdup("Get-ChildItem");
                                                                 }
-#line 1333 "y.tab.c"
+#line 1521 "y.tab.c"
 break;
-case 18:
-#line 65 "proj.y"
+case 25:
+#line 79 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-ChildItem -Path %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1342 "y.tab.c"
+#line 1530 "y.tab.c"
 break;
-case 19:
-#line 72 "proj.y"
+case 26:
+#line 86 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1349,19 +1537,19 @@ case 19:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1353 "y.tab.c"
+#line 1541 "y.tab.c"
 break;
-case 20:
-#line 79 "proj.y"
+case 27:
+#line 93 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1362 "y.tab.c"
+#line 1550 "y.tab.c"
 break;
-case 21:
-#line 84 "proj.y"
+case 28:
+#line 98 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName(yystack.l_mark[-2].strval, intermediar);
@@ -1369,10 +1557,10 @@ case 21:
                                                                     sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1373 "y.tab.c"
+#line 1561 "y.tab.c"
 break;
-case 22:
-#line 91 "proj.y"
+case 29:
+#line 105 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertLSParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1380,68 +1568,434 @@ case 22:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1384 "y.tab.c"
+#line 1572 "y.tab.c"
 break;
-case 23:
-#line 100 "proj.y"
+case 30:
+#line 115 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "New-Item -ItemType Directory -Path %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1581 "y.tab.c"
+break;
+case 31:
+#line 120 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "New-Item -Path %s -ItemType Directory %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1590 "y.tab.c"
+break;
+case 32:
+#line 127 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1604 "y.tab.c"
+break;
+case 33:
+#line 137 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName(yystack.l_mark[0].strval, intermediar);
+                                                                    yyval.strval = strdup(intermediar);
+                                                                }
+#line 1613 "y.tab.c"
+break;
+case 34:
+#line 142 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName(yystack.l_mark[-2].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", yystack.l_mark[0].strval);
+                                                                    else
+                                                                        sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1627 "y.tab.c"
+break;
+case 35:
+#line 152 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertMKDIRParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1638 "y.tab.c"
+break;
+case 36:
+#line 162 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Copy-Item %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1647 "y.tab.c"
+break;
+case 37:
+#line 167 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Copy-Item %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1656 "y.tab.c"
+break;
+case 38:
+#line 174 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "%s -Destination %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1665 "y.tab.c"
+break;
+case 39:
+#line 181 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1679 "y.tab.c"
+break;
+case 40:
+#line 191 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName(yystack.l_mark[0].strval, intermediar);
+                                                                    yyval.strval = strdup(intermediar);
+                                                                }
+#line 1688 "y.tab.c"
+break;
+case 41:
+#line 196 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName(yystack.l_mark[-2].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", yystack.l_mark[0].strval);
+                                                                    else
+                                                                        sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1702 "y.tab.c"
+break;
+case 42:
+#line 206 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertCPParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1713 "y.tab.c"
+break;
+case 43:
+#line 216 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Get-Content %s -Path %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1722 "y.tab.c"
+break;
+case 44:
+#line 222 "proj.y"
+	{ yyval.strval = strdup(yystack.l_mark[0].strval); }
+#line 1727 "y.tab.c"
+break;
+case 45:
+#line 223 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result,"%s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1736 "y.tab.c"
+break;
+case 46:
+#line 230 "proj.y"
+	{
+                                                                    char* result = malloc(256);
+                                                                    char intermediar[128] = "";
+                                                                    convertHeadParams(yystack.l_mark[-1].strval, yystack.l_mark[0].intval, intermediar);
+                                                                    strcpy(result, intermediar);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1747 "y.tab.c"
+break;
+case 47:
+#line 237 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    char intermediar[128] = "";
+                                                                    convertHeadParams(yystack.l_mark[-2].strval, yystack.l_mark[-1].intval, intermediar);
+                                                                    sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1758 "y.tab.c"
+break;
+case 48:
+#line 244 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "%s", yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1767 "y.tab.c"
+break;
+case 49:
+#line 252 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Stop-Process %s", yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1776 "y.tab.c"
+break;
+case 50:
+#line 257 "proj.y"
+	{
+                                                                    char* result = malloc(512);
+                                                                    sprintf(result, "Stop-Process %s", yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1785 "y.tab.c"
+break;
+case 51:
+#line 264 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1796 "y.tab.c"
+break;
+case 52:
+#line 271 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName(yystack.l_mark[0].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s", intermediar);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1807 "y.tab.c"
+break;
+case 53:
+#line 278 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName(yystack.l_mark[-2].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1818 "y.tab.c"
+break;
+case 54:
+#line 285 "proj.y"
+	{
+                                                                    char intermediar[128] = "";
+                                                                    convertPKILLParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                    char* result = malloc(256);
+                                                                    sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    yyval.strval = result;
+                                                                }
+#line 1829 "y.tab.c"
+break;
+case 55:
+#line 294 "proj.y"
+	{
+                                                                    yyval.strval = strdup(yystack.l_mark[0].strval);
+                                                                }
+#line 1836 "y.tab.c"
+break;
+case 56:
+#line 297 "proj.y"
+	{
+                                                                    char* conversion = malloc(10);
+                                                                    sprintf(conversion, "%d", yystack.l_mark[0].intval);
+                                                                    yyval.strval = conversion;
+                                                                }
+#line 1845 "y.tab.c"
+break;
+case 57:
+#line 305 "proj.y"
+	{
+                                                                    char* result = malloc(20);
+                                                                    strcpy(result, "Get-NetIpAddress");
+                                                                    yyval.strval = result;
+                                                                }
+#line 1854 "y.tab.c"
+break;
+case 58:
+#line 310 "proj.y"
+	{
+                                                                    char* result = malloc(20);
+                                                                    strcpy(result, "Get-NetIpAddress");
+                                                                    yyval.strval = result;
+                                                                }
+#line 1863 "y.tab.c"
+break;
+case 61:
+#line 322 "proj.y"
+	{
+                                                                        char* result = malloc(22);
+                                                                        strcpy(result, "Get-NetTcpConnection");
+                                                                        yyval.strval = result;
+                                                                    }
+#line 1872 "y.tab.c"
+break;
+case 66:
+#line 338 "proj.y"
+	{
+                                                                        char* result = malloc(512);
+                                                                        sprintf(result, "Invoke-WebRequest -Uri %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
+                                                                        yyval.strval = result;
+                                                                    }
+#line 1881 "y.tab.c"
+break;
+case 67:
+#line 343 "proj.y"
+	{
+                                                                        char* result = malloc(512);
+                                                                        sprintf(result, "Invoke-WebRequest -Uri %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                        yyval.strval = result;
+                                                                    }
+#line 1890 "y.tab.c"
+break;
+case 68:
+#line 350 "proj.y"
+	{
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                        char* result = malloc(256);
+                                                                        sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                        yyval.strval = result;
+                                                                    }
+#line 1901 "y.tab.c"
+break;
+case 69:
+#line 357 "proj.y"
+	{
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName(yystack.l_mark[0].strval, intermediar);
+                                                                        yyval.strval = strdup(intermediar);
+                                                                    }
+#line 1910 "y.tab.c"
+break;
+case 70:
+#line 362 "proj.y"
+	{
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName(yystack.l_mark[-2].strval, intermediar);
+                                                                        char* result = malloc(256);
+                                                                        sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                        yyval.strval = result;
+                                                                    }
+#line 1921 "y.tab.c"
+break;
+case 71:
+#line 369 "proj.y"
+	{
+                                                                        char intermediar[128] = "";
+                                                                        convertCURLParamName(yystack.l_mark[-1].strval, intermediar);
+                                                                        char* result = malloc(256);
+                                                                        sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                        yyval.strval = result;
+                                                                    }
+#line 1932 "y.tab.c"
+break;
+case 72:
+#line 379 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Move-Item %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1393 "y.tab.c"
+#line 1941 "y.tab.c"
 break;
-case 24:
-#line 105 "proj.y"
+case 73:
+#line 384 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Move-Item %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1402 "y.tab.c"
+#line 1950 "y.tab.c"
 break;
-case 25:
-#line 111 "proj.y"
+case 74:
+#line 390 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "-Path %s -Destination %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1411 "y.tab.c"
+#line 1959 "y.tab.c"
 break;
-case 26:
-#line 118 "proj.y"
+case 75:
+#line 397 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName(yystack.l_mark[-1].strval, intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        strcpy(result, "");
+                                                                    else
+                                                                        sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1422 "y.tab.c"
+#line 1973 "y.tab.c"
 break;
-case 27:
-#line 125 "proj.y"
+case 76:
+#line 407 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1431 "y.tab.c"
+#line 1982 "y.tab.c"
 break;
-case 28:
-#line 130 "proj.y"
+case 77:
+#line 412 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName(yystack.l_mark[-2].strval, intermediar);
                                                                     char* result = malloc(256);
-                                                                    sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
+                                                                    if(strcmp(intermediar, "") == 0)
+                                                                        sprintf(result, "%s", yystack.l_mark[0].strval);
+                                                                    else
+                                                                        sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1442 "y.tab.c"
+#line 1996 "y.tab.c"
 break;
-case 29:
-#line 137 "proj.y"
+case 78:
+#line 422 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertMVParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1449,26 +2003,26 @@ case 29:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1453 "y.tab.c"
+#line 2007 "y.tab.c"
 break;
-case 30:
-#line 146 "proj.y"
+case 79:
+#line 432 "proj.y"
 	{
                                                                     yyval.strval = strdup("Get-Location");
                                                                 }
-#line 1460 "y.tab.c"
+#line 2014 "y.tab.c"
 break;
-case 31:
-#line 149 "proj.y"
+case 80:
+#line 435 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-Location %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1469 "y.tab.c"
+#line 2023 "y.tab.c"
 break;
-case 32:
-#line 156 "proj.y"
+case 81:
+#line 442 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPWDParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1476,19 +2030,19 @@ case 32:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1480 "y.tab.c"
+#line 2034 "y.tab.c"
 break;
-case 33:
-#line 163 "proj.y"
+case 82:
+#line 449 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPWDParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1489 "y.tab.c"
+#line 2043 "y.tab.c"
 break;
-case 34:
-#line 168 "proj.y"
+case 83:
+#line 454 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPWDParamName(yystack.l_mark[-2].strval, intermediar);
@@ -1496,10 +2050,10 @@ case 34:
                                                                     sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1500 "y.tab.c"
+#line 2054 "y.tab.c"
 break;
-case 35:
-#line 175 "proj.y"
+case 84:
+#line 461 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPWDParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1507,46 +2061,46 @@ case 35:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1511 "y.tab.c"
+#line 2065 "y.tab.c"
 break;
-case 36:
-#line 184 "proj.y"
+case 85:
+#line 471 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "New-Item -ItemType File -Path %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1520 "y.tab.c"
+#line 2074 "y.tab.c"
 break;
-case 37:
-#line 189 "proj.y"
+case 86:
+#line 476 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "New-Item -ItemType File -Path %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1529 "y.tab.c"
+#line 2083 "y.tab.c"
 break;
-case 38:
-#line 194 "proj.y"
+case 87:
+#line 481 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "New-Item -ItemType File -Path %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1538 "y.tab.c"
+#line 2092 "y.tab.c"
 break;
-case 39:
-#line 199 "proj.y"
+case 88:
+#line 486 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "New-Item -ItemType File %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1547 "y.tab.c"
+#line 2101 "y.tab.c"
 break;
-case 40:
-#line 206 "proj.y"
+case 89:
+#line 493 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertTouchParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1554,19 +2108,19 @@ case 40:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1558 "y.tab.c"
+#line 2112 "y.tab.c"
 break;
-case 41:
-#line 213 "proj.y"
+case 90:
+#line 500 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertTouchParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1567 "y.tab.c"
+#line 2121 "y.tab.c"
 break;
-case 42:
-#line 218 "proj.y"
+case 91:
+#line 505 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertTouchParamName(yystack.l_mark[-2].strval, intermediar);
@@ -1574,10 +2128,10 @@ case 42:
                                                                     sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1578 "y.tab.c"
+#line 2132 "y.tab.c"
 break;
-case 43:
-#line 225 "proj.y"
+case 92:
+#line 512 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertTouchParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1585,46 +2139,46 @@ case 43:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1589 "y.tab.c"
+#line 2143 "y.tab.c"
 break;
-case 44:
-#line 234 "proj.y"
+case 93:
+#line 522 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Remove-Item -Path %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1598 "y.tab.c"
+#line 2152 "y.tab.c"
 break;
-case 45:
-#line 239 "proj.y"
+case 94:
+#line 527 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Remove-Item -Path %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1607 "y.tab.c"
+#line 2161 "y.tab.c"
 break;
-case 46:
-#line 244 "proj.y"
+case 95:
+#line 532 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Remove-Item -Path %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1616 "y.tab.c"
+#line 2170 "y.tab.c"
 break;
-case 47:
-#line 249 "proj.y"
+case 96:
+#line 537 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Remove-Item %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1625 "y.tab.c"
+#line 2179 "y.tab.c"
 break;
-case 48:
-#line 256 "proj.y"
+case 97:
+#line 544 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertRMParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1632,19 +2186,19 @@ case 48:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1636 "y.tab.c"
+#line 2190 "y.tab.c"
 break;
-case 49:
-#line 263 "proj.y"
+case 98:
+#line 551 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertRMParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1645 "y.tab.c"
+#line 2199 "y.tab.c"
 break;
-case 50:
-#line 268 "proj.y"
+case 99:
+#line 556 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertRMParamName(yystack.l_mark[-2].strval, intermediar);
@@ -1652,10 +2206,10 @@ case 50:
                                                                     sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1656 "y.tab.c"
+#line 2210 "y.tab.c"
 break;
-case 51:
-#line 275 "proj.y"
+case 100:
+#line 563 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertRMParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1663,73 +2217,73 @@ case 51:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1667 "y.tab.c"
+#line 2221 "y.tab.c"
 break;
-case 52:
-#line 284 "proj.y"
+case 101:
+#line 573 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Select-String %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1676 "y.tab.c"
+#line 2230 "y.tab.c"
 break;
-case 53:
-#line 289 "proj.y"
+case 102:
+#line 578 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Select-String %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1685 "y.tab.c"
+#line 2239 "y.tab.c"
 break;
-case 54:
-#line 294 "proj.y"
+case 103:
+#line 583 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Select-String %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1694 "y.tab.c"
+#line 2248 "y.tab.c"
 break;
-case 55:
-#line 299 "proj.y"
+case 104:
+#line 588 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Select-String %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1703 "y.tab.c"
+#line 2257 "y.tab.c"
 break;
-case 56:
-#line 306 "proj.y"
+case 105:
+#line 595 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "-Pattern %s -Path %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1712 "y.tab.c"
+#line 2266 "y.tab.c"
 break;
-case 57:
-#line 311 "proj.y"
+case 106:
+#line 600 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "-Pattern %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1721 "y.tab.c"
+#line 2275 "y.tab.c"
 break;
-case 58:
-#line 318 "proj.y"
+case 107:
+#line 607 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertGrepParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1730 "y.tab.c"
+#line 2284 "y.tab.c"
 break;
-case 59:
-#line 323 "proj.y"
+case 108:
+#line 612 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertGrepParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1737,53 +2291,53 @@ case 59:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1741 "y.tab.c"
+#line 2295 "y.tab.c"
 break;
-case 60:
-#line 332 "proj.y"
+case 109:
+#line 622 "proj.y"
 	{
                                                                     yyval.strval = strdup("Get-Content");
                                                                 }
-#line 1748 "y.tab.c"
+#line 2302 "y.tab.c"
 break;
-case 61:
-#line 335 "proj.y"
+case 110:
+#line 625 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-Content -Path %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1757 "y.tab.c"
+#line 2311 "y.tab.c"
 break;
-case 62:
-#line 340 "proj.y"
+case 111:
+#line 630 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-Content -Path %s %s", yystack.l_mark[0].strval, yystack.l_mark[-1].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1766 "y.tab.c"
+#line 2320 "y.tab.c"
 break;
-case 63:
-#line 345 "proj.y"
+case 112:
+#line 635 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-Content -Path %s %s", yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1775 "y.tab.c"
+#line 2329 "y.tab.c"
 break;
-case 64:
-#line 350 "proj.y"
+case 113:
+#line 640 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-Content %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1784 "y.tab.c"
+#line 2338 "y.tab.c"
 break;
-case 65:
-#line 357 "proj.y"
+case 114:
+#line 647 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertCatParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1791,19 +2345,19 @@ case 65:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1795 "y.tab.c"
+#line 2349 "y.tab.c"
 break;
-case 66:
-#line 364 "proj.y"
+case 115:
+#line 654 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertCatParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1804 "y.tab.c"
+#line 2358 "y.tab.c"
 break;
-case 67:
-#line 369 "proj.y"
+case 116:
+#line 659 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertCatParamName(yystack.l_mark[-2].strval, intermediar);
@@ -1811,10 +2365,10 @@ case 67:
                                                                     sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1815 "y.tab.c"
+#line 2369 "y.tab.c"
 break;
-case 68:
-#line 376 "proj.y"
+case 117:
+#line 666 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertCatParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1822,35 +2376,35 @@ case 68:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1826 "y.tab.c"
+#line 2380 "y.tab.c"
 break;
-case 69:
-#line 385 "proj.y"
+case 118:
+#line 676 "proj.y"
 	{
                                                                     yyval.strval = strdup("Get-Process");
                                                                 }
-#line 1833 "y.tab.c"
+#line 2387 "y.tab.c"
 break;
-case 70:
-#line 388 "proj.y"
+case 119:
+#line 679 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-Process %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1842 "y.tab.c"
+#line 2396 "y.tab.c"
 break;
-case 71:
-#line 393 "proj.y"
+case 120:
+#line 684 "proj.y"
 	{
                                                                     char* result = malloc(512);
-                                                                    sprintf(result, "Get-Process %s", yystack.l_mark[0].strval);
+                                                                    sprintf(result, "Get-Process -Name %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1851 "y.tab.c"
+#line 2405 "y.tab.c"
 break;
-case 72:
-#line 400 "proj.y"
+case 121:
+#line 691 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPSParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1858,19 +2412,19 @@ case 72:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1862 "y.tab.c"
+#line 2416 "y.tab.c"
 break;
-case 73:
-#line 407 "proj.y"
+case 122:
+#line 698 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPSParamName(yystack.l_mark[0].strval, intermediar);
                                                                     yyval.strval = strdup(intermediar);
                                                                 }
-#line 1871 "y.tab.c"
+#line 2425 "y.tab.c"
 break;
-case 74:
-#line 412 "proj.y"
+case 123:
+#line 703 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPSParamName(yystack.l_mark[-2].strval, intermediar);
@@ -1878,10 +2432,10 @@ case 74:
                                                                     sprintf(result, "%s %s %s", intermediar, yystack.l_mark[-1].strval, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1882 "y.tab.c"
+#line 2436 "y.tab.c"
 break;
-case 75:
-#line 419 "proj.y"
+case 124:
+#line 710 "proj.y"
 	{
                                                                     char intermediar[128] = "";
                                                                     convertPSParamName(yystack.l_mark[-1].strval, intermediar);
@@ -1889,32 +2443,32 @@ case 75:
                                                                     sprintf(result, "%s %s", intermediar, yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1893 "y.tab.c"
+#line 2447 "y.tab.c"
 break;
-case 76:
-#line 428 "proj.y"
+case 125:
+#line 720 "proj.y"
 	{
                                                                     yyval.strval = strdup("Clear-Host");
                                                                 }
-#line 1900 "y.tab.c"
+#line 2454 "y.tab.c"
 break;
-case 77:
-#line 433 "proj.y"
+case 126:
+#line 726 "proj.y"
 	{
                                                                     yyval.strval = strdup("Get-History");
                                                                 }
-#line 1907 "y.tab.c"
+#line 2461 "y.tab.c"
 break;
-case 78:
-#line 436 "proj.y"
+case 127:
+#line 729 "proj.y"
 	{
                                                                     char* result = malloc(512);
                                                                     sprintf(result, "Get-History -Count %s", yystack.l_mark[0].strval);
                                                                     yyval.strval = result;
                                                                 }
-#line 1916 "y.tab.c"
+#line 2470 "y.tab.c"
 break;
-#line 1918 "y.tab.c"
+#line 2472 "y.tab.c"
     default:
         break;
     }
